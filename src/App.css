@@ -1,0 +1,26 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+
+@import "tailwindcss";
+
+@plugin "daisyui" {
+  themes: light --default;
+}
+
+
+/* OrderLoom Primary – Industrial Teal → Slate */
+.btn-primary {
+  @apply bg-linear-to-r from-teal-800 to-slate-700 border-none text-white;
+}
+
+.btn-primary:hover {
+  @apply opacity-80;
+}
+
+.text-primary {
+  @apply bg-linear-to-r from-teal-800 to-slate-700 bg-clip-text text-transparent;
+}
+
+body {
+  font-family: "Inter", sans-serif;
+  font-style: normal;
+}
