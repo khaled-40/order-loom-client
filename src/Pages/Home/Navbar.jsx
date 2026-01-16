@@ -1,16 +1,35 @@
 import React from 'react';
 import { Link, NavLink } from 'react-router';
 import './Navbar.css'
+import useAuth from '../../Hooks/useAuth';
+import { CiLogout } from "react-icons/ci";
+import { toast } from 'react-toastify';
 
 
 
 const Navbar = () => {
+    const { user, signOutUser } = useAuth();
     const links = <>
         <NavLink to={'/'}>Home</NavLink>
         <NavLink to={'/all-products'}>All Products</NavLink>
         <NavLink to={'/contact'}>Contact</NavLink>
         <NavLink to={'/about-us'}>About Us</NavLink>
-    </>
+    </>;
+    const handleLogout = () => {
+        signOutUser()
+            .then(() => {
+                toast.info("Session ended successfully", {
+                    style: {
+                        background: "linear-gradient(to right, #065F46, #334155)",
+                        color: "#fff",
+                    },
+                    autoClose: 2000,
+                });
+            })
+            .catch(error => {
+                console.log(error)
+            })
+    }
     return (
         <div className="navbar bg-base-100 shadow-sm">
             <div className="navbar-start">
@@ -27,13 +46,33 @@ const Navbar = () => {
                 <h2 className="mr-2 text-3xl font-bold">Order<span className='text-primary'>Loom</span></h2>
             </div>
             <div className="navbar-end ">
-                <ul className="menu menu-horizontal px-1 hidden md:flex space-x-2">
+                <ul className="menu menu-horizontal px-1 hidden md:flex space-x-4">
                     {links}
                 </ul>
-                <>
-                    <Link to={'/auth/login'} className='btn btn-primary'>LogIn</Link>
-                    <Link to={'/auth/register'} className='btn ml-2 btn-primary'>Register</Link>
-                </>
+                {
+                    !user ? (
+                        <>
+                            <Link to={'/auth/login'} className='btn btn-primary'>LogIn</Link>
+                            <Link to={'/auth/register'} className='btn ml-2 btn-primary'>Register</Link>
+                        </>
+                    ) : (
+                        <div className="dropdown dropdown-end relative z-50 ml-4">
+                            <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar">
+                                <div className="w-10 rounded-full">
+                                    <img
+                                        src={user?.photoURL || "https://i.ibb.co.com/nxCCrZ9/TVS-Apache-RTR-160-copy1-cf4fd92da6.webp"}
+                                        alt="user avatar"
+                                    />
+                                </div>
+                            </div>
+                            <ul tabIndex={0} className="menu menu-sm dropdown-content bg-base-100 rounded-box z-50 mt-3 w-52 p-2 shadow">
+                                {/* <li><ThemeToggle></ThemeToggle></li> */}
+                                <li><a onClick={handleLogout}><CiLogout />Logout</a></li>
+                            </ul>
+                        </div>
+                    )
+                }
+
             </div>
 
         </div>
