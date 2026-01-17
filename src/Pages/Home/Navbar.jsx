@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, NavLink } from 'react-router';
-import './Navbar.css'
+import './Navbar.css';
 import useAuth from '../../Hooks/useAuth';
 import { CiLogout } from "react-icons/ci";
 import { toast } from 'react-toastify';
@@ -10,10 +10,10 @@ import { toast } from 'react-toastify';
 const Navbar = () => {
     const { user, signOutUser } = useAuth();
     const links = <>
-        <NavLink to={'/'}>Home</NavLink>
-        <NavLink to={'/all-products'}>All Products</NavLink>
-        <NavLink to={'/contact'}>Contact</NavLink>
-        <NavLink to={'/about-us'}>About Us</NavLink>
+        <li><NavLink to={'/'}>Home</NavLink></li>
+        <li><NavLink to={'/all-products'}>All Products</NavLink></li>
+        <li><NavLink to={'/contact'}>Contact</NavLink></li>
+        <li><NavLink to={'/about-us'}>About Us</NavLink></li>
     </>;
     const handleLogout = () => {
         signOutUser()
@@ -46,7 +46,7 @@ const Navbar = () => {
                 <h2 className="mr-2 text-3xl font-bold">Order<span className='text-primary'>Loom</span></h2>
             </div>
             <div className="navbar-end ">
-                <ul className="menu menu-horizontal px-1 hidden md:flex space-x-4">
+                <ul className="menu menu-horizontal px-1 hidden md:flex">
                     {links}
                 </ul>
                 {
@@ -56,7 +56,7 @@ const Navbar = () => {
                             <Link to={'/auth/register'} className='btn ml-2 btn-primary'>Register</Link>
                         </>
                     ) : (
-                        <div className="dropdown dropdown-end relative z-50 ml-4">
+                        <div className="dropdown dropdown-end relative z-50 ml-1">
                             <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar">
                                 <div className="w-10 rounded-full">
                                     <img

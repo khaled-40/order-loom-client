@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Link, useLocation, useNavigate } from 'react-router';
-// import axios from 'axios';
 import useAuth from '../../Hooks/useAuth';
 import { FaEye } from "react-icons/fa";
 import { FaEyeSlash } from "react-icons/fa";
@@ -20,7 +19,7 @@ const Register = () => {
     const handleRegistration = (data) => {
         console.log(data)
         const profileImg = data.photo[0];
-
+        data.status = 
         createUser(data.email, data.password)
             .then(result => {
                 console.log(result)
