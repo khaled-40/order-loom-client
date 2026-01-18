@@ -15,8 +15,5 @@ ul a.active {
 }
 
 .menu-horizontal {
-    display: flex;
-    align-items: center;
-    gap: 16px;
     margin-right: 12px;
 }
