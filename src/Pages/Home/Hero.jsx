@@ -4,7 +4,7 @@ import heroImg from "../../assets/undraw_order-delivered_puaw.svg"; // replace w
 
 const Hero = () => {
     return (
-        <section className="min-h-[80vh] flex items-center bg-gradient-to-r from-teal-800 to-slate-700 text-white">
+        <section className="min-h-[80vh] flex items-center bg-linear-to-r from-teal-800 to-slate-700 text-white">
             <div className="container mx-auto p-4 grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
 
                 {/* Left Content */}
@@ -41,7 +41,7 @@ const Hero = () => {
                         <img
                             src={heroImg}
                             alt="Garment production tracking"
-                            className="max-w-full md:max-w-[480px] drop-shadow-2xl"
+                            className="max-w-full md:max-w-120 drop-shadow-2xl"
                         />
                     </div>
                 </Slide>
