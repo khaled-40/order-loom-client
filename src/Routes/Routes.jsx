@@ -7,6 +7,7 @@ import AboutUs from "../Pages/AboutUs/AboutUs";
 import AuthLayout from "../Layout/AuthLayout";
 import Register from "../Pages/Register/Register";
 import Login from "../Pages/Login/Login";
+import ProductDetails from "../Components/ProductDetails";
 
 export const router = createBrowserRouter([
   {
@@ -28,6 +29,11 @@ export const router = createBrowserRouter([
         {
             path:'about-us',
             Component: AboutUs
+        },
+        {
+            path:'product-details/:id',
+            Component: ProductDetails,
+            loader: ({params}) => fetch(`http://localhost:3000/product-details/${params.id}`).then(res => res.json())
         },
     ]
   },

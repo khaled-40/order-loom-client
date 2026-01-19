@@ -1,4 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
+import { Fade } from "react-awesome-reveal";
 import useAxiosSecure from '../../Hooks/useAxiosSecure';
 import { Link } from 'react-router';
 
@@ -16,14 +17,14 @@ const LatestProducts = () => {
     if (isLoading) {
         return (
             <div className="text-center py-20 text-gray-400">
-                Loading latest products…
+                <span className="loading loading-spinner text-neutral"></span>
             </div>
         );
     }
 
     return (
         <section className="max-w-7xl mx-auto px-4 py-12">
-            <h2 className="text-3xl font-bold mb-8">Explore Our 
+            <h2 className="text-3xl font-bold mb-8">Explore Our
                 Latest <span className="text-primary">Products</span>
             </h2>
 
@@ -67,7 +68,7 @@ const LatestProducts = () => {
                                 </div>
 
                                 <Link
-                                    to={`/products/${product.title}`}
+                                    to={`/product-details/${product._id}`}
                                     className="btn btn-sm btn-primary"
                                 >
                                     View Details
