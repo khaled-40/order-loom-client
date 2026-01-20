@@ -12,8 +12,14 @@ const Navbar = () => {
     const links = <>
         <li><NavLink to={'/'}>Home</NavLink></li>
         <li><NavLink to={'/all-products'}>All Products</NavLink></li>
-        <li><NavLink to={'/contact'}>Contact</NavLink></li>
-        <li><NavLink to={'/about-us'}>About Us</NavLink></li>
+        {
+            user ?
+                <li><NavLink to={'/dashboard'}>Dashboard</NavLink></li>
+                :
+                <><li><NavLink to={'/contact'}>Contact</NavLink></li>
+                    <li><NavLink to={'/about-us'}>About Us</NavLink></li>
+                </>
+        }
     </>;
     const handleLogout = () => {
         signOutUser()
