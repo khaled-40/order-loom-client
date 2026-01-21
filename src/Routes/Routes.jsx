@@ -7,8 +7,9 @@ import AboutUs from "../Pages/AboutUs/AboutUs";
 import AuthLayout from "../Layout/AuthLayout";
 import Register from "../Pages/Register/Register";
 import Login from "../Pages/Login/Login";
-import ProductDetails from "../Components/ProductDetails";
 import DashboardLayout from "../Layout/DashboardLayout";
+import ProductDetails from "../Pages/AllProducts/ProductDetails";
+import PlaceOrder from "../Pages/AllProducts/PlaceOrder";
 
 export const router = createBrowserRouter([
     {
@@ -34,6 +35,11 @@ export const router = createBrowserRouter([
             {
                 path: 'product-details/:id',
                 Component: ProductDetails,
+                loader: ({ params }) => fetch(`http://localhost:3000/products/${params.id}`).then(res => res.json())
+            },
+            {
+                path: 'place-order/:id',
+                Component: PlaceOrder,
                 loader: ({ params }) => fetch(`http://localhost:3000/products/${params.id}`).then(res => res.json())
             },
         ]

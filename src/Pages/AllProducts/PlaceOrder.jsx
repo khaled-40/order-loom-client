@@ -1,0 +1,240 @@
+// import React, { useMemo } from 'react';
+import { useLoaderData } from 'react-router';
+import { useForm } from 'react-hook-form';
+import useAuth from '../../Hooks/useAuth';
+
+const PlaceOrder = () => {
+  const product = useLoaderData();
+  const { user } = useAuth();
+
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm({
+    defaultValues: {
+      email: user?.email,
+      quantity: product.minimumOrder,
+    },
+  });
+
+  const quantity = watch('quantity') || 0;
+  const paymentMethod = watch( 'paymentMethod' );
+
+  const totalPrice = quantity * product.price;
+
+  const onSubmit = (data) => {
+    const payload = {
+      ...data,
+      productId: product._id,
+      productTitle: product.title,
+      unitPrice: product.price,
+      totalPrice,
+      paymentMethod
+    };
+
+    console.log(payload);
+  };
+
+  return (
+    <section className="max-w-6xl mx-auto px-4 py-10">
+      <h1 className="text-2xl md:text-3xl font-bold mb-2">
+        Booking & Order Confirmation
+      </h1>
+      <p className="text-gray-500 mb-8">
+        Please review the details carefully before placing your order
+      </p>
+
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+
+        {/* FORM */}
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className="lg:col-span-2 bg-base-100 rounded-2xl shadow-md p-6 space-y-5"
+        >
+
+          {/* Email */}
+          <div>
+            <label className="label">Email</label>
+            <input
+              readOnly
+              className="input input-bordered w-full bg-base-200"
+              {...register('email')}
+            />
+          </div>
+
+          {/* Product Title */}
+          <div>
+            <label className="label">Product</label>
+            <input
+              readOnly
+              className="input input-bordered w-full bg-base-200"
+              value={product.title}
+            />
+          </div>
+
+          {/* Price Info */}
+          <div>
+            <label className="label">Unit Price</label>
+            <input
+              readOnly
+              className="input input-bordered w-full bg-base-200"
+              value={`$${product.price}`}
+            />
+          </div>
+
+          {/* Name Fields */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="label">First Name</label>
+              <input
+                className="input input-bordered w-full"
+                placeholder='First Name'
+                {...register('firstName', { required: true })}
+              />
+              {errors.firstName && (
+                <p className="text-error text-xs">Required</p>
+              )}
+            </div>
+
+            <div>
+              <label className="label">Last Name</label>
+              <input
+                className="input input-bordered w-full"
+                placeholder='Last Name'
+                {...register('lastName', { required: true })}
+              />
+              {errors.lastName && (
+                <p className="text-error text-xs">Required</p>
+              )}
+            </div>
+          </div>
+
+          {/* Quantity */}
+          <div>
+            <label className="label">
+              Order Quantity
+              <span className="ml-2 text-xs text-gray-500">
+                (Min: {product.minimumOrder}, Available: {product.availableQuantity})
+              </span>
+            </label>
+            <input
+              type="number"
+              className="input input-bordered w-full"
+              {...register('quantity', {
+                required: true,
+                valueAsNumber: true,
+                min: product.minimumOrder,
+                max: product.availableQuantity,
+              })}
+            />
+            {errors.quantity && (
+              <p className="text-error text-xs mt-1">
+                Quantity out of allowed range
+              </p>
+            )}
+          </div>
+
+          {/* Total Price */}
+          <div>
+            <label className="label">Total Price</label>
+            <input
+              readOnly
+              className="input input-bordered w-full bg-base-200 font-semibold"
+              value={`$${totalPrice.toFixed(2)}`}
+            />
+          </div>
+
+          <fieldset className="fieldset">
+            <legend className="fieldset-legend">Payment Method</legend>
+            <select {...register('paymentMethod')} defaultValue="Pick a Region" className="select w-full">
+              <option disabled={true}>Pick a Payment Method</option>
+              {
+                product.paymentOptions.map((r, i) => <option key={i} value={r}>{r}</option>)
+              }
+            </select>
+          </fieldset>
+
+
+          {/* Contact */}
+          <div>
+            <label className="label">Contact Number</label>
+            <input
+              type="tel"
+              className="input input-bordered w-full"
+              placeholder='Your Contact'
+              {...register('contact', { required: true })}
+            />
+            {errors.contact && (
+              <p className="text-error text-xs">Required</p>
+            )}
+          </div>
+
+          {/* Address */}
+          <div>
+            <label className="label">Delivery Address</label>
+            <textarea
+              className="textarea textarea-bordered w-full"
+              placeholder='Your Address'
+              rows={3}
+              {...register('address', { required: true })}
+            />
+            {errors.address && (
+              <p className="text-error text-xs pt-2">Required</p>
+            )}
+          </div>
+
+          {/* Notes */}
+          <div>
+            <label className="label">Additional Notes</label>
+            <textarea
+              className="textarea textarea-bordered w-full"
+              rows={2}
+              {...register('notes')}
+              placeholder="Optional instructions"
+            />
+          </div>
+
+          <button className="btn btn-primary w-full text-lg">
+            Place Order
+          </button>
+        </form>
+
+        {/* SUMMARY */}
+        <aside className="bg-base-100 rounded-2xl shadow-md p-6 h-fit sticky top-24">
+          <h2 className="font-bold text-lg mb-4">Order Summary</h2>
+
+          <div className="flex gap-4 items-center">
+            <img
+              src={product.images}
+              alt={product.title}
+              className="w-20 h-20 rounded-xl object-cover"
+            />
+            <div>
+              <p className="font-semibold">{product.title}</p>
+              <p className="text-sm text-gray-500">${product.price} / unit</p>
+            </div>
+          </div>
+
+          <div className="divider" />
+
+          <div className="flex justify-between text-sm">
+            <span>Quantity</span>
+            <span>{quantity}</span>
+          </div>
+
+          <div className="flex justify-between text-sm">
+            <span>Total</span>
+            <span className="font-semibold">
+              ${totalPrice.toFixed(2)}
+            </span>
+          </div>
+        </aside>
+
+      </div>
+    </section>
+  );
+};
+
+export default PlaceOrder;
