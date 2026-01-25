@@ -19,7 +19,7 @@ const Register = () => {
     const handleRegistration = (data) => {
         console.log(data)
         const profileImg = data.photo[0];
-        data.status = 
+        const role = data.role;
         createUser(data.email, data.password)
             .then(result => {
                 console.log(result)
@@ -33,18 +33,19 @@ const Register = () => {
                         const photoURL = res.data.data.url;
 
                         //         // Store User in database 
-                        //         const userInfo = {
-                        //             name: data.name,
-                        //             email: result.user.email,
-                        //             photoURL: photoURL
-                        //         }
-                        //         axios.post('http://localhost:3000/user', userInfo)
-                        //             .then(() => {
-                        //                 console.log('account created')
-                        //             })
-                        //             .catch(err => {
-                        //                 console.error(err);
-                        //             });
+                        const userInfo = {
+                            name: data.name,
+                            email: result.user.email,
+                            role: role,
+                            photoURL: photoURL
+                        }
+                        axios.post('http://localhost:3000/users', userInfo)
+                            .then(() => {
+                                console.log('account created')
+                            })
+                            .catch(err => {
+                                console.error(err);
+                            });
 
                         // Update user profile 
                         const updateProfile = {
@@ -75,11 +76,20 @@ const Register = () => {
         signInWithGoogle()
             .then(result => {
                 console.log(result.user)
-                // const userInfo = {
-                //     name: result.user.displayName,
-                //     email: result.user.email,
-                //     photoURL: result.user.photoURL
-                // }
+                const userInfo = {
+                    name: result.user.displayName,
+                    email: result.user.email,
+                    role: 'buyer',
+                    photoURL: result.user.photoURL
+                }
+                axios.post('http://localhost:3000/users', userInfo)
+                    .then(() => {
+                        console.log('account created')
+                    })
+                    .catch(err => {
+                        console.error(err);
+                    });
+
                 navigate(location?.state || '/')
             })
             .catch(error => {

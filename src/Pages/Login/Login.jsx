@@ -6,6 +6,7 @@ import { FaEye } from "react-icons/fa";
 import { FaEyeSlash } from "react-icons/fa";
 import { toast } from 'react-toastify';
 
+
 const Login = () => {
     const { signInWithGoogle, signInUser } = useAuth();
     const { register, handleSubmit, formState: { errors } } = useForm();

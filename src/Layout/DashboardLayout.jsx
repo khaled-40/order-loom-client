@@ -1,4 +1,8 @@
 import React from 'react';
+import logoImg from '../assets/orderloom-high-resolution-logo-transparent.png'
+import { Link, Outlet } from 'react-router';
+import { FaBackward } from "react-icons/fa6";
+import { FaUsers } from 'react-icons/fa';
 
 const DashboardLayout = () => {
     return (
@@ -26,9 +30,7 @@ const DashboardLayout = () => {
 
                     {/* CHANGE: Replaced generic title with project-specific branding */}
                     <div className="flex-1">
-                        <h1 className="text-lg font-semibold tracking-wide">
-                            OrderLoom Dashboard
-                        </h1>
+                        <h1 className='text-xl font-bold text-primary'>Order Loom Dashboard</h1>
                     </div>
 
                     {/* CHANGE: Right-side spacing reserved for future UI elements */}
@@ -39,6 +41,7 @@ const DashboardLayout = () => {
                 {/* CHANGE: Added max-width and breathing space */}
                 <main className="p-6 bg-base-100 min-h-screen max-w-7xl mx-auto w-full">
                     {/* Page Content */}
+                    <Outlet></Outlet>
                 </main>
             </div>
 
@@ -50,12 +53,16 @@ const DashboardLayout = () => {
                 <aside className="w-64 bg-base-200 min-h-full px-4 py-6">
 
                     {/* CHANGE: Sidebar header for identity */}
-                    <div className="mb-8">
-                        <h2 className="text-xl font-bold">OrderLoom</h2>
-                        <p className="text-xs text-gray-500">
-                            Product & Order Management
-                        </p>
-                    </div>
+                    <Link className='flex gap-2 p-1' to={'/'}>
+                        <FaBackward />
+                        <div>
+                            <img className='w-40 h-10' src={logoImg} alt="" />
+                            <p className="text-xs text-gray-500">
+                                Product & Order Management
+                            </p>
+                        </div>
+                    </Link>
+
 
                     <ul className="menu gap-2">
 
@@ -66,9 +73,9 @@ const DashboardLayout = () => {
 
                         {/* CHANGE: Icons aligned + larger hit area */}
                         <li>
-                            <a className="flex items-center gap-3 rounded-lg">
-                                📊 <span>Dashboard</span>
-                            </a>
+                            <Link to={'/dashboard/manage-users'} className="flex items-center gap-3 rounded-lg">
+                                <FaUsers /> <span>Manage Users</span>
+                            </Link>
                         </li>
 
                         <li>

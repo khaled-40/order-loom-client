@@ -2,14 +2,19 @@
 import { useLoaderData } from 'react-router';
 import { useForm } from 'react-hook-form';
 import useAuth from '../../Hooks/useAuth';
+import useAxiosSecure from '../../Hooks/useAxiosSecure';
+import { useEffect, useState } from 'react';
 
 const PlaceOrder = () => {
   const product = useLoaderData();
+  const [checkoutUrl, setCheckoutUrl]= useState(null);
+  const axiosSecure = useAxiosSecure();
   const { user } = useAuth();
 
   const {
     register,
     handleSubmit,
+
     watch,
     formState: { errors },
   } = useForm({
@@ -20,12 +25,12 @@ const PlaceOrder = () => {
   });
 
   const quantity = watch('quantity') || 0;
-  const paymentMethod = watch( 'paymentMethod' );
+  const paymentMethod = watch('paymentMethod');
 
   const totalPrice = quantity * product.price;
 
-  const onSubmit = (data) => {
-    const payload = {
+  const onSubmit = async (data) => {
+    const paymentInfo = {
       ...data,
       productId: product._id,
       productTitle: product.title,
@@ -34,8 +39,25 @@ const PlaceOrder = () => {
       paymentMethod
     };
 
-    console.log(payload);
+    console.log(paymentInfo);
+
+    if (paymentInfo.paymentMethod === 'stripe') {
+      console.log('add stripe checkout session')
+      const res = await axiosSecure.post('/create-checkout-session', paymentInfo);
+      console.log(res.data);
+      setCheckoutUrl(res.data.url);
+
+    }
+    else {
+      console.log('save the data with payment status cash on delivery')
+    }
   };
+      useEffect(() => {
+        // refetch();
+        if (checkoutUrl) {
+            window.location.assign(checkoutUrl);
+        }
+    }, [checkoutUrl]);
 
   return (
     <section className="max-w-6xl mx-auto px-4 py-10">
@@ -61,6 +83,7 @@ const PlaceOrder = () => {
               readOnly
               className="input input-bordered w-full bg-base-200"
               {...register('email')}
+              defaultValue={user?.email}
             />
           </div>
 
@@ -70,7 +93,7 @@ const PlaceOrder = () => {
             <input
               readOnly
               className="input input-bordered w-full bg-base-200"
-              value={product.title}
+              defaultValue={product.title}
             />
           </div>
 
@@ -80,7 +103,7 @@ const PlaceOrder = () => {
             <input
               readOnly
               className="input input-bordered w-full bg-base-200"
-              value={`$${product.price}`}
+              defaultValue={`$${product.price}`}
             />
           </div>
 

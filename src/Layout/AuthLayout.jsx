@@ -1,6 +1,7 @@
 import React from 'react';
 import authImg from '../assets/undraw_authentication_1evl.svg'
 import { Outlet, useNavigate } from 'react-router';
+import { IoArrowBackOutline } from "react-icons/io5";
 
 
 const AuthLayout = () => {
@@ -11,7 +12,7 @@ const AuthLayout = () => {
     return (
         <div>
             <div className="flex justify-end">
-                <button onClick={handleGoBack} className="btn btn-primary mt-8 mr-8">Go Back</button>
+                <button onClick={handleGoBack} className="btn btn-primary mt-8 mr-8"><IoArrowBackOutline /> Go Back</button>
             </div>
             <div className='flex items-center mt-10'>
                 <div className='flex-1'>
