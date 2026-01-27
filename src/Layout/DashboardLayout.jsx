@@ -3,6 +3,7 @@ import logoImg from '../assets/orderloom-high-resolution-logo-transparent.png'
 import { Link, Outlet } from 'react-router';
 import { FaBackward } from "react-icons/fa6";
 import { FaUsers } from 'react-icons/fa';
+import { GiBrickPile } from "react-icons/gi";
 
 const DashboardLayout = () => {
     return (
@@ -75,6 +76,13 @@ const DashboardLayout = () => {
                         <li>
                             <Link to={'/dashboard/manage-users'} className="flex items-center gap-3 rounded-lg">
                                 <FaUsers /> <span>Manage Users</span>
+                            </Link>
+                        </li>
+
+
+                        <li>
+                            <Link to={'/dashboard/all-products'} className="flex items-center gap-3 rounded-lg">
+                                <GiBrickPile /> <span>All Products</span>
                             </Link>
                         </li>
 

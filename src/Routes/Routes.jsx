@@ -11,6 +11,7 @@ import DashboardLayout from "../Layout/DashboardLayout";
 import ProductDetails from "../Pages/AllProducts/ProductDetails";
 import PlaceOrder from "../Pages/AllProducts/PlaceOrder";
 import ManageUsers from "../Pages/Dahsboard/AdminDashboard/ManageUsers";
+import AdminAllProducts from "../Pages/Dahsboard/AdminDashboard/AdminAllProducts";
 
 export const router = createBrowserRouter([
     {
@@ -66,7 +67,11 @@ export const router = createBrowserRouter([
             {
                 path: '/dashboard/manage-users',
                 Component: ManageUsers
-            }
+            },
+            {
+                path: '/dashboard/all-products',
+                Component: AdminAllProducts
+            },
         ]
     }
 ]);
