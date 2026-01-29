@@ -4,6 +4,8 @@ import { Link, Outlet } from 'react-router';
 import { FaBackward } from "react-icons/fa6";
 import { FaUsers } from 'react-icons/fa';
 import { GiBrickPile } from "react-icons/gi";
+import { IoReorderThreeSharp } from "react-icons/io5";
+import { MdOutlineAddShoppingCart } from 'react-icons/md';
 
 const DashboardLayout = () => {
     return (
@@ -72,7 +74,7 @@ const DashboardLayout = () => {
                             <span>Main</span>
                         </li>
 
-                        {/* CHANGE: Icons aligned + larger hit area */}
+                        {/* Admin Routes */}
                         <li>
                             <Link to={'/dashboard/manage-users'} className="flex items-center gap-3 rounded-lg">
                                 <FaUsers /> <span>Manage Users</span>
@@ -83,6 +85,19 @@ const DashboardLayout = () => {
                         <li>
                             <Link to={'/dashboard/all-products'} className="flex items-center gap-3 rounded-lg">
                                 <GiBrickPile /> <span>All Products</span>
+                            </Link>
+                        </li>
+
+                        <li>
+                            <Link to={'/dashboard/all-orders'} className="flex items-center gap-3 rounded-lg">
+                                <IoReorderThreeSharp /> <span>All Orders</span>
+                            </Link>
+                        </li>
+
+                        {/* Manger Routes */}
+                        <li>
+                            <Link to={'/dashboard/add-product'} className="flex items-center gap-3 rounded-lg">
+                                <MdOutlineAddShoppingCart /> <span>Add Product</span>
                             </Link>
                         </li>
 

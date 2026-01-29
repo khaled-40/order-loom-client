@@ -80,10 +80,10 @@ const AdminAllProducts = () => {
     };
     const handleShowOnHomeToggle = (id, showOnHome) => {
         const toggle = !showOnHome;
-        axiosSecure.patch(`/products/${id}/toggle`, {toggle})
-        .then(res => {
-            console.log(res)
-        })
+        axiosSecure.patch(`/products/${id}/toggle`, { toggle })
+            .then(res => {
+                console.log(res)
+            })
     }
     return (
         <div>
@@ -206,20 +206,20 @@ const AdminAllProducts = () => {
                             />
                         </div>
 
-                        {/* Payment Mode */}
+                        {/* Payment Method */}
                         <div>
                             <label className="label">
-                                <span className="label-text">Payment Option</span>
+                                <span className="label-text">
+                                    Payment Options
+                                </span>
                             </label>
                             <select
-                                {...register('paymentOptions', {
-                                    required: true
-                                })}
-                                defaultValue='cod'
+                                {...register('paymentOptions', { required: true })}
                                 className="select select-bordered w-full">
-                                <option>cod</option>
                                 <option>stripe</option>
+                                <option>cod</option>
                             </select>
+                            {errors.paymentOptions?.type === 'required' && <p className='text-red-700'>Payment Option is required</p>}
                         </div>
 
                         {/* Images */}

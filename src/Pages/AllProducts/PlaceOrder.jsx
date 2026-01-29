@@ -169,15 +169,14 @@ const PlaceOrder = () => {
             />
           </div>
 
-          <fieldset className="fieldset">
+          <div>
             <legend className="fieldset-legend">Payment Method</legend>
-            <select {...register('paymentMethod')} defaultValue="Pick a Region" className="select w-full">
-              <option disabled={true}>Pick a Payment Method</option>
-              {
-                product.paymentOptions.map((r, i) => <option key={i} value={r}>{r}</option>)
-              }
-            </select>
-          </fieldset>
+            <input
+              readOnly
+              className="input input-bordered w-full bg-base-200 font-semibold"
+              value={product.paymentOptions}
+            />
+          </div>
 
 
           {/* Contact */}

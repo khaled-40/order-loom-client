@@ -68,17 +68,15 @@ const ProductDetails = () => {
           {/* Payment Options */}
           <div>
             <h3 className="text-sm font-semibold mb-2">
-              Payment Options
+              Payment Option
             </h3>
             <div className="flex flex-wrap gap-2">
-              {product.paymentOptions.map(option => (
                 <span
-                  key={option}
                   className="px-3 py-1 text-xs rounded-full border bg-base-200"
                 >
-                  {option.toUpperCase()}
+                  {product.paymentOptions}
                 </span>
-              ))}
+              
             </div>
           </div>
 

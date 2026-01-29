@@ -12,6 +12,8 @@ import ProductDetails from "../Pages/AllProducts/ProductDetails";
 import PlaceOrder from "../Pages/AllProducts/PlaceOrder";
 import ManageUsers from "../Pages/Dahsboard/AdminDashboard/ManageUsers";
 import AdminAllProducts from "../Pages/Dahsboard/AdminDashboard/AdminAllProducts";
+import AdminAllOrders from "../Pages/Dahsboard/AdminDashboard/AdminAllOrders";
+import AddProudct from "../Pages/Dahsboard/ManagerDashboard/AddProudct";
 
 export const router = createBrowserRouter([
     {
@@ -71,6 +73,14 @@ export const router = createBrowserRouter([
             {
                 path: '/dashboard/all-products',
                 Component: AdminAllProducts
+            },
+            {
+                path: '/dashboard/all-orders',
+                Component: AdminAllOrders
+            },
+            {
+                path: '/dashboard/add-product',
+                Component: AddProudct
             },
         ]
     }
