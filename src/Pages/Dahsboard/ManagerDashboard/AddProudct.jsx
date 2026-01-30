@@ -57,6 +57,7 @@ const AddProudct = () => {
     const handleAddProduct = data => {
         data.showOnHome = false;
         data.images = imageURL;
+        data.createdByUserEmail = user?.email;
         data.createdBy = user?.displayName;
         console.log(data);
         axiosSecure.post('/products', data)

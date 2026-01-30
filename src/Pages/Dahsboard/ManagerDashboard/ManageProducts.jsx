@@ -1,32 +1,43 @@
-import React, { useEffect, useState } from 'react';
-import useAxiosSecure from '../../../Hooks/useAxiosSecure';
+import React, { useEffect, useRef, useState } from 'react';
+import useAuth from '../../../Hooks/useAuth';
 import { useQuery } from '@tanstack/react-query';
+import useAxiosSecure from '../../../Hooks/useAxiosSecure';
 import { FiEdit } from 'react-icons/fi';
 import { MdDelete } from 'react-icons/md';
-import { useRef } from 'react';
-import { useForm, Watch } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import Swal from 'sweetalert2';
 
-const AdminAllProducts = () => {
+const ManageProducts = () => {
     const [selectedProduct, setSelectedProduct] = useState({});
     const categories = [
-        "Electronics",
-        "Clothing",
-        "Wearables",
-        "Accessories",
-        "Home Decor",
-        "Computers",
-        "Furniture",
-        "Kitchen",
-        "Audio"
+        "Shirt",
+        "T-Shirt",
+        "Polo Shirt",
+        "Pant",
+        "Trouser",
+        "Jeans",
+        "Shorts",
+        "Hoodie",
+        "Sweater",
+        "Jacket",
+        "Blazer",
+        "Skirt",
+        "Kurti",
+        "Panjabi",
+        "Pajama",
+        "Coat",
+        "Sportswear",
+        "Accessories"
     ];
     const { register, handleSubmit, formState: { errors }, reset } = useForm();
-    const axiosSecure = useAxiosSecure();
+    const { user } = useAuth();
     const editModalRef = useRef();
+    const axiosSecure = useAxiosSecure();
     const { data: products = [], refetch } = useQuery({
-        queryKey: ['products'],
+        queryKey: ['products', user?.email],
         queryFn: async () => {
-            const res = await axiosSecure.get('/products');
+            const res = await axiosSecure.get(`/products/${user?.email}/byEmail`);
+            console.log(res.data)
             return res.data;
         }
     });
@@ -34,7 +45,6 @@ const AdminAllProducts = () => {
         setSelectedProduct(product)
         // reset(product);
         editModalRef.current.showModal();
-        console.log(product)
     };
     useEffect(() => {
         if (selectedProduct && Object.keys(selectedProduct).length > 0) {
@@ -82,65 +92,48 @@ const AdminAllProducts = () => {
                             refetch();
                             Swal.fire({
                                 title: "Deleted!",
-                                text: "Your Product has been deleted.",
+                                text: "Your product has been deleted.",
                                 icon: "success"
                             });
-
                         }
                     })
             }
         });
     }
-    const handleShowOnHomeToggle = (id, showOnHome) => {
-        const toggle = !showOnHome;
-        axiosSecure.patch(`/products/${id}/toggle`, { toggle })
-            .then(res => {
-                console.log(res)
-            })
-    }
     return (
         <div>
-            <h2 className='text-2xl font-bold'>Manage All Products <span className='text-primary'>({products.length})</span></h2>
+            <h2 className='text-2xl font-bold'>Manage Products <span className='text-primary'>({products.length})</span></h2>
             <div className="overflow-x-auto">
                 <table className="table table-zebra">
                     {/* head */}
                     <thead>
                         <tr>
+                            <th>SL No</th>
                             <th>Image</th>
                             <th>Name</th>
                             <th>Price</th>
-                            <th>Category</th>
-                            <th>CreatedBy</th>
-                            <th>Show on Home</th>
+                            <th>Payment Method</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
                         {
-                            products.map(product => <tr key={product._id}>
+                            products.map((product, index) => <tr key={product._id}>
+                                <th>{index + 1}</th>
                                 <td>
                                     <div className="flex items-center gap-3">
                                         <div className="avatar">
                                             <div className="mask mask-squircle h-12 w-12">
                                                 <img
                                                     src={product.images}
-                                                    alt="Product Image" />
+                                                    alt="Avatar Tailwind CSS Component" />
                                             </div>
                                         </div>
                                     </div>
                                 </td>
                                 <td>{product.title}</td>
                                 <td>$ {product.price}</td>
-                                <td>{product.category}</td>
-                                <td>{product?.createdBy}</td>
-                                <td className="text-center">
-                                    <input
-                                        type="checkbox"
-                                        defaultChecked={product.showOnHome}
-                                        onChange={() => handleShowOnHomeToggle(product._id, product.showOnHome)}
-                                        className="w-5 h-5 cursor-pointer accent-emerald-600"
-                                    />
-                                </td>
+                                <td>{product.paymentOptions}</td>
                                 <td className='space-x-1'>
                                     <button
                                         className='btn btn-sm'
@@ -155,7 +148,6 @@ const AdminAllProducts = () => {
                                 </td>
                             </tr>)
                         }
-
                     </tbody>
                 </table>
             </div>
@@ -286,9 +278,8 @@ const AdminAllProducts = () => {
                     </form>
                 </div>
             </dialog>
-
         </div>
     );
 };
 
-export default AdminAllProducts;
+export default ManageProducts;
