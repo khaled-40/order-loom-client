@@ -4,17 +4,17 @@ import { useForm } from 'react-hook-form';
 import useAuth from '../../Hooks/useAuth';
 import useAxiosSecure from '../../Hooks/useAxiosSecure';
 import { useEffect, useState } from 'react';
+import Swal from 'sweetalert2';
 
 const PlaceOrder = () => {
   const product = useLoaderData();
-  const [checkoutUrl, setCheckoutUrl]= useState(null);
+  const [checkoutUrl, setCheckoutUrl] = useState(null);
   const axiosSecure = useAxiosSecure();
   const { user } = useAuth();
 
   const {
     register,
     handleSubmit,
-
     watch,
     formState: { errors },
   } = useForm({
@@ -24,8 +24,7 @@ const PlaceOrder = () => {
     },
   });
 
-  const quantity = watch('quantity') || 0;
-  const paymentMethod = watch('paymentMethod');
+  const quantity = watch('quantity');
 
   const totalPrice = quantity * product.price;
 
@@ -36,7 +35,7 @@ const PlaceOrder = () => {
       productTitle: product.title,
       unitPrice: product.price,
       totalPrice,
-      paymentMethod
+      paymentOptions: product.paymentOptions
     };
 
     console.log(paymentInfo);
@@ -49,15 +48,27 @@ const PlaceOrder = () => {
 
     }
     else {
-      console.log('save the data with payment status cash on delivery')
+      axiosSecure.post('/orders', paymentInfo)
+        .then(res => {
+          console.log(res.data);
+          if (res.data.insertedId) {
+            Swal.fire({
+              position: "top-end",
+              icon: "success",
+              title: "Your work has been saved",
+              showConfirmButton: false,
+              timer: 1500
+            });
+          }
+        })
     }
   };
-      useEffect(() => {
-        // refetch();
-        if (checkoutUrl) {
-            window.location.assign(checkoutUrl);
-        }
-    }, [checkoutUrl]);
+  useEffect(() => {
+    // refetch();
+    if (checkoutUrl) {
+      window.location.assign(checkoutUrl);
+    }
+  }, [checkoutUrl]);
 
   return (
     <section className="max-w-6xl mx-auto px-4 py-10">
@@ -89,7 +100,7 @@ const PlaceOrder = () => {
 
           {/* Product Title */}
           <div>
-            <label className="label">Product</label>
+            <label className="label">Product Name</label>
             <input
               readOnly
               className="input input-bordered w-full bg-base-200"

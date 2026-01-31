@@ -43,7 +43,7 @@ const DashboardLayout = () => {
 
                 {/* ===================== PAGE CONTENT ===================== */}
                 {/* CHANGE: Added max-width and breathing space */}
-                <main className="p-6 bg-base-100 min-h-screen max-w-7xl mx-auto w-full">
+                <main className="p-2 md:p-6 bg-base-100 min-h-screen max-w-7xl mx-auto w-full">
                     {/* Page Content */}
                     <Outlet></Outlet>
                 </main>

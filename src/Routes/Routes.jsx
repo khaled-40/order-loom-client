@@ -15,6 +15,7 @@ import AdminAllProducts from "../Pages/Dahsboard/AdminDashboard/AdminAllProducts
 import AdminAllOrders from "../Pages/Dahsboard/AdminDashboard/AdminAllOrders";
 import AddProudct from "../Pages/Dahsboard/ManagerDashboard/AddProudct";
 import ManageProducts from "../Pages/Dahsboard/ManagerDashboard/ManageProducts";
+import OrderDetails from "../Pages/Dahsboard/AdminDashboard/OrderDetails";
 
 export const router = createBrowserRouter([
     {
@@ -86,6 +87,11 @@ export const router = createBrowserRouter([
             {
                 path: '/dashboard/manage-products',
                 Component: ManageProducts
+            },
+            {
+                path: '/dashboard/order-details/:id',
+                Component: OrderDetails,
+                loader: ({ params }) => fetch(`http://localhost:3000/orders/${params.id}`).then(res => res.json())
             },
         ]
     }
