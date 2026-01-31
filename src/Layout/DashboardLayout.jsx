@@ -5,7 +5,7 @@ import { FaBackward } from "react-icons/fa6";
 import { FaUsers } from 'react-icons/fa';
 import { GiBrickPile } from "react-icons/gi";
 import { IoReorderThreeSharp } from "react-icons/io5";
-import { MdOutlineAddShoppingCart } from 'react-icons/md';
+import { MdOutlineAddShoppingCart, MdOutlinePendingActions } from 'react-icons/md';
 import { FiBox } from "react-icons/fi";
 
 const DashboardLayout = () => {
@@ -106,6 +106,12 @@ const DashboardLayout = () => {
                         <li>
                             <Link to={'/dashboard/manage-products'} className="flex items-center gap-3 rounded-lg">
                                 <FiBox /> <span>Manage Products</span>
+                            </Link>
+                        </li>
+
+                        <li>
+                            <Link to={'/dashboard/pending-orders'} className="flex items-center gap-3 rounded-lg">
+                                <MdOutlinePendingActions /> <span>Pending Orders</span>
                             </Link>
                         </li>
 
