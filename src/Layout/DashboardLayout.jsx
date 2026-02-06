@@ -7,6 +7,7 @@ import { GiBrickPile } from "react-icons/gi";
 import { IoReorderThreeSharp } from "react-icons/io5";
 import { MdOutlineAddShoppingCart, MdOutlinePendingActions } from 'react-icons/md';
 import { FiBox } from "react-icons/fi";
+import { FcApprove } from "react-icons/fc";
 
 const DashboardLayout = () => {
     return (
@@ -102,7 +103,7 @@ const DashboardLayout = () => {
                             </Link>
                         </li>
 
-                        
+
                         <li>
                             <Link to={'/dashboard/manage-products'} className="flex items-center gap-3 rounded-lg">
                                 <FiBox /> <span>Manage Products</span>
@@ -112,6 +113,12 @@ const DashboardLayout = () => {
                         <li>
                             <Link to={'/dashboard/pending-orders'} className="flex items-center gap-3 rounded-lg">
                                 <MdOutlinePendingActions /> <span>Pending Orders</span>
+                            </Link>
+                        </li>
+
+                        <li>
+                            <Link to={'/dashboard/approved-orders'} className="flex items-center gap-3 rounded-lg">
+                                <FcApprove /> <span>Approved Orders</span>
                             </Link>
                         </li>
 

@@ -8,6 +8,9 @@ import Swal from 'sweetalert2';
 
 const PlaceOrder = () => {
   const product = useLoaderData();
+  // const quan = ();
+  // console.log(quan)
+  const [quantity, setQuantity] = useState(parseInt(product.minimumOrder));
   const [checkoutUrl, setCheckoutUrl] = useState(null);
   const axiosSecure = useAxiosSecure();
   const { user } = useAuth();
@@ -15,7 +18,6 @@ const PlaceOrder = () => {
   const {
     register,
     handleSubmit,
-    watch,
     formState: { errors },
   } = useForm({
     defaultValues: {
@@ -24,13 +26,14 @@ const PlaceOrder = () => {
     },
   });
 
-  const quantity = watch('quantity');
 
   const totalPrice = quantity * product.price;
 
   const onSubmit = async (data) => {
+    setQuantity(data.quantity)
     const paymentInfo = {
       ...data,
+      email: user.email,
       productId: product._id,
       productTitle: product.title,
       unitPrice: product.price,
@@ -40,12 +43,15 @@ const PlaceOrder = () => {
 
     console.log(paymentInfo);
 
-    if (paymentInfo.paymentMethod === 'stripe') {
+    if (paymentInfo.paymentOptions === 'stripe') {
       console.log('add stripe checkout session')
       const res = await axiosSecure.post('/create-checkout-session', paymentInfo);
       console.log(res.data);
       setCheckoutUrl(res.data.url);
-
+      axiosSecure.post('/orders', paymentInfo)
+        .then(res => {
+          console.log(res.data)
+        })
     }
     else {
       axiosSecure.post('/orders', paymentInfo)
@@ -55,7 +61,7 @@ const PlaceOrder = () => {
             Swal.fire({
               position: "top-end",
               icon: "success",
-              title: "Your work has been saved",
+              title: "Your order has been placed",
               showConfirmButton: false,
               timer: 1500
             });
@@ -93,7 +99,6 @@ const PlaceOrder = () => {
             <input
               readOnly
               className="input input-bordered w-full bg-base-200"
-              {...register('email')}
               defaultValue={user?.email}
             />
           </div>
@@ -157,6 +162,7 @@ const PlaceOrder = () => {
               type="number"
               className="input input-bordered w-full"
               {...register('quantity', {
+                onChange: e => setQuantity(e.target.value),
                 required: true,
                 valueAsNumber: true,
                 min: product.minimumOrder,

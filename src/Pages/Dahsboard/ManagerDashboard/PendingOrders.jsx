@@ -9,19 +9,30 @@ import Swal from 'sweetalert2';
 const PendingOrders = () => {
     const { user } = useAuth();
     const axiosSecure = useAxiosSecure();
-    const { data: orders = [] } = useQuery({
-        queryKey: ['orders', 'pending', user?.email],
+    const { data: product = {} } = useQuery({
+        queryKey: ['product', user?.email],
         queryFn: async () => {
-            const res = await axiosSecure.get(`/orders/${user?.email}/byEmail?status=pending`);
+            const res = await axiosSecure.get(`/products?email=${user.email}`);
+            return res.data;
+        }
+    })
+    console.log(product)
+    const { data: orders = [], refetch } = useQuery({
+        queryKey: ['orders','pending'],
+        queryFn: async () => {
+            const res = await axiosSecure.get(`/orders/${product._id}?status=pending`);
             return res.data;
         }
     })
     console.log(orders)
-    const handleStatus = (id, status) => {
-        const newStatus = { status };
-        axiosSecure.patch(`/orders/${id}`, newStatus)
+    const handleStatus = (order, status) => {
+        axiosSecure.patch(`/orders/${order._id}`, {
+            status,
+            trackingId: order.trackingId
+        })
             .then(res => {
                 if (res.data.modifiedCount) {
+                    refetch();
                     Swal.fire({
                         position: "top-end",
                         icon: "success",
@@ -63,12 +74,12 @@ const PendingOrders = () => {
                                         </button>
                                     </Link>
                                     <button
-                                        onClick={() => handleStatus(order._id, 'accepted')}
+                                        onClick={() => handleStatus(order, 'approved')}
                                         className="btn btn-sm btn-success">
                                         Accept
                                     </button>
                                     <button
-                                        onClick={() => handleStatus(order._id, 'rejected')}
+                                        onClick={() => handleStatus(order, 'rejected')}
                                         className="btn btn-sm btn-error">
                                         Reject
                                     </button>

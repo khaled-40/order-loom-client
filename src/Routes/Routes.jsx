@@ -17,6 +17,7 @@ import AddProudct from "../Pages/Dahsboard/ManagerDashboard/AddProudct";
 import ManageProducts from "../Pages/Dahsboard/ManagerDashboard/ManageProducts";
 import OrderDetails from "../Pages/Dahsboard/AdminDashboard/OrderDetails";
 import PendingOrders from "../Pages/Dahsboard/ManagerDashboard/PendingOrders";
+import ApprovedOrders from "../Pages/Dahsboard/ManagerDashboard/ApprovedOrders";
 
 export const router = createBrowserRouter([
     {
@@ -97,6 +98,10 @@ export const router = createBrowserRouter([
             {
                 path: '/dashboard/pending-orders',
                 Component: PendingOrders,
+            },
+            {
+                path: '/dashboard/approved-orders',
+                Component: ApprovedOrders,
             },
         ]
     }

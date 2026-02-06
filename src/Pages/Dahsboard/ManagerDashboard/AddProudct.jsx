@@ -4,9 +4,10 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import useAxiosSecure from '../../../Hooks/useAxiosSecure';
 import useAuth from '../../../Hooks/useAuth';
+import Swal from 'sweetalert2';
 
 const AddProudct = () => {
-    const {user} = useAuth();
+    const { user } = useAuth();
     const [imageURL, setImageURL] = useState(null);
     const [imageUploading, setImageUploading] = useState(false);
     const axiosSecure = useAxiosSecure();
@@ -32,7 +33,7 @@ const AddProudct = () => {
         "Accessories"
     ];
 
-    const { register, handleSubmit, formState: { errors },reset } = useForm();
+    const { register, handleSubmit, formState: { errors }, reset } = useForm();
 
     const handleImageUpload = async (file) => {
         try {
@@ -61,10 +62,17 @@ const AddProudct = () => {
         data.createdBy = user?.displayName;
         console.log(data);
         axiosSecure.post('/products', data)
-        .then(res  => {
-            reset();
-            console.log(res)
-        })
+            .then(res => {
+                reset();
+                console.log(res)
+                Swal.fire({
+                    position: "top-end",
+                    icon: "success",
+                    title: 'Your product has been added successfully',
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+            })
     }
     return (
         <div className=" max-w-7xl">
