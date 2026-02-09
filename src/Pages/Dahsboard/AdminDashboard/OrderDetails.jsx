@@ -1,9 +1,11 @@
 import React from "react";
+import { IoArrowBackOutline } from "react-icons/io5";
 import { useLoaderData, useNavigate } from "react-router";
 
 const OrderDetails = () => {
     const order = useLoaderData();
     const navigate = useNavigate();
+    console.log(order)
     const {
         _id,
         status,
@@ -21,7 +23,7 @@ const OrderDetails = () => {
         createdAt,
     } = order || {};
     const handleGoBack = () => {
-        navigate('/dashboard/all-orders')
+        navigate(-1)
     }
 
     return (
@@ -122,8 +124,8 @@ const OrderDetails = () => {
             <div className="flex justify-end gap-3">
                 <button 
                 onClick={handleGoBack}
-                className="btn btn-outline">
-                    Back
+                className="btn btn-primary">
+                  <IoArrowBackOutline />  Back
                 </button>
             </div>
         </div>

@@ -9,18 +9,19 @@ import Swal from 'sweetalert2';
 const PendingOrders = () => {
     const { user } = useAuth();
     const axiosSecure = useAxiosSecure();
-    const { data: product = {} } = useQuery({
+    const { data: product } = useQuery({
         queryKey: ['product', user?.email],
         queryFn: async () => {
-            const res = await axiosSecure.get(`/products?email=${user.email}`);
+            const res = await axiosSecure.get(`/products/byEmail?email=${user?.email}`);
+            console.log(res.data)
             return res.data;
         }
     })
     console.log(product)
     const { data: orders = [], refetch } = useQuery({
-        queryKey: ['orders','pending'],
+        queryKey: ['orders', 'pending',product?._id],
         queryFn: async () => {
-            const res = await axiosSecure.get(`/orders/${product._id}?status=pending`);
+            const res = await axiosSecure.get(`/orders/by-product/${product?._id}?status=pending`);
             return res.data;
         }
     })

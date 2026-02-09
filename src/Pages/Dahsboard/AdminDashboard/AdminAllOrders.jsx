@@ -9,7 +9,7 @@ const AdminAllOrders = () => {
     const { data: orders = [] } = useQuery({
         queryKey: ['orders', 'pending'],
         queryFn: async () => {
-            const res = await axiosSecure.get('orders?status=pending');
+            const res = await axiosSecure.get('/orders');
             return res.data;
         }
     })

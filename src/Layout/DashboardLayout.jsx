@@ -122,6 +122,13 @@ const DashboardLayout = () => {
                             </Link>
                         </li>
 
+                        {/* Buyer Dashboard */}
+                        <li>
+                            <Link to={'/dashboard/my-orders'} className="flex items-center gap-3 rounded-lg">
+                                <IoReorderThreeSharp /> <span>My Orders</span>
+                            </Link>
+                        </li>
+
                         <li>
                             <a className="flex items-center gap-3 rounded-lg">
                                 📦 <span>Products</span>

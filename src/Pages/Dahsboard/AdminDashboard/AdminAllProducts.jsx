@@ -27,9 +27,11 @@ const AdminAllProducts = () => {
         queryKey: ['products'],
         queryFn: async () => {
             const res = await axiosSecure.get('/products');
+            console.log(res.data)
             return res.data;
         }
     });
+    console.log(products)
     const openEditModal = (product) => {
         setSelectedProduct(product)
         // reset(product);
@@ -116,8 +118,7 @@ const AdminAllProducts = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {
-                            products.map(product => <tr key={product._id}>
+                        {products.map(product => <tr key={product._id}>
                                 <td>
                                     <div className="flex items-center gap-3">
                                         <div className="avatar">

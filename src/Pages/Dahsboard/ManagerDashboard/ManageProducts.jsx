@@ -33,10 +33,10 @@ const ManageProducts = () => {
     const { user } = useAuth();
     const editModalRef = useRef();
     const axiosSecure = useAxiosSecure();
-    const { data: products = [], refetch } = useQuery({
+    const { data: products=[], refetch } = useQuery({
         queryKey: ['products', user?.email],
         queryFn: async () => {
-            const res = await axiosSecure.get(`/products/${user?.email}/byEmail`);
+            const res = await axiosSecure.get(`/allproducts/byEmail?email=${user.email}`);
             console.log(res.data)
             return res.data;
         }

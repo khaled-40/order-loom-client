@@ -20,18 +20,18 @@ const ApprovedOrders = () => {
         location: '',
         note: '',
     });
-    const { data: product = {} } = useQuery({
+    const { data: product = [] } = useQuery({
         queryKey: ['product', user?.email],
         queryFn: async () => {
-            const res = await axiosSecure.get(`/products?email=${user.email}`);
+            const res = await axiosSecure.get(`/products/byEmail?email=${user.email}`);
             return res.data;
         }
     })
     console.log(product)
     const { data: orders = [], refetch } = useQuery({
-        queryKey: ['orders'],
+        queryKey: ['orders',product._id],
         queryFn: async () => {
-            const res = await axiosSecure.get(`/orders/${product._id}`);
+            const res = await axiosSecure.get(`/orders/by-product/${product._id}`);
             return res.data;
         }
     })
