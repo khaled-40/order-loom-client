@@ -75,7 +75,7 @@ const ApprovedOrders = () => {
                     Swal.fire({
                         position: "top-end",
                         icon: "success",
-                        title: `Order moved to ${trackingModal.step.label}`,
+                        title: `Order moved to ${trackingModal.step.defaultLocation}`,
                         showConfirmButton: false,
                         timer: 1500
                     });

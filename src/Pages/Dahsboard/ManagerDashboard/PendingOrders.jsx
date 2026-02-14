@@ -67,7 +67,7 @@ const PendingOrders = () => {
                                 <td>{order.firstName}</td>
                                 <td>{order.productTitle}</td>
                                 <td>{order.quantity}</td>
-                                <td>{new Date(order.createdAt).toLocaleString()}</td>
+                                <td>{new Date(order.placedAt).toLocaleString()}</td>
                                 <td className='space-x-1'>
                                     <Link to={`/dashboard/order-details/${order._id}`}>
                                         <button className='btn btn-sm'>
