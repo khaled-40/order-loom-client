@@ -19,6 +19,7 @@ import OrderDetails from "../Pages/Dahsboard/AdminDashboard/OrderDetails";
 import PendingOrders from "../Pages/Dahsboard/ManagerDashboard/PendingOrders";
 import ApprovedOrders from "../Pages/Dahsboard/ManagerDashboard/ApprovedOrders";
 import MyOrders from "../Pages/Dahsboard/BuyerDashboard/MyOrders";
+import TrackOrders from "../Pages/Dahsboard/BuyerDashboard/TrackOrders";
 
 export const router = createBrowserRouter([
     {
@@ -107,6 +108,11 @@ export const router = createBrowserRouter([
             {
                 path: '/dashboard/my-orders',
                 Component: MyOrders,
+            },
+            {
+                path: '/dashboard/track-order/:orderId',
+                Component: TrackOrders,
+                loader: ({ params }) => fetch(`http://localhost:3000/orders/${params.orderId}`).then(res => res.json())
             },
         ]
     }

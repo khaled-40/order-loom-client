@@ -71,6 +71,11 @@ const MyOrders = () => {
                                         <MdPreview />
                                     </button>
                                 </Link>
+                                <Link to={`/dashboard/track-order/${order._id}`}>
+                                    <button className='btn btn-sm btn-primary mr-1'>
+                                        Track Order
+                                    </button>
+                                </Link>
                                 {
                                     order.status === 'pending' &&
                                     <button
