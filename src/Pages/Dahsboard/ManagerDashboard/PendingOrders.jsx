@@ -17,9 +17,15 @@ const PendingOrders = () => {
             return res.data;
         }
     })
-    console.log(product)
+    const { data: myUser } = useQuery({
+        queryKey: ['user', user?.email],
+        queryFn: async () => {
+            const res = await axiosSecure.get(`/user/byEmail?email=${user.email}`);
+            return res.data;
+        }
+    })
     const { data: orders = [], refetch } = useQuery({
-        queryKey: ['orders', 'pending',product?._id],
+        queryKey: ['orders', 'pending', product?._id],
         queryFn: async () => {
             const res = await axiosSecure.get(`/orders/by-product/${product?._id}?status=pending`);
             return res.data;
@@ -29,7 +35,8 @@ const PendingOrders = () => {
     const handleStatus = (order, status) => {
         axiosSecure.patch(`/orders/${order._id}`, {
             status,
-            trackingId: order.trackingId
+            trackingId: order.trackingId,
+            adminApproval: myUser.adminApproval
         })
             .then(res => {
                 if (res.data.modifiedCount) {

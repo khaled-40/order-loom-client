@@ -5,6 +5,7 @@ import useAuth from '../../Hooks/useAuth';
 import useAxiosSecure from '../../Hooks/useAxiosSecure';
 import { useEffect, useState } from 'react';
 import Swal from 'sweetalert2';
+import { useQuery } from '@tanstack/react-query';
 
 const PlaceOrder = () => {
   const product = useLoaderData();
@@ -14,6 +15,14 @@ const PlaceOrder = () => {
   const [checkoutUrl, setCheckoutUrl] = useState(null);
   const axiosSecure = useAxiosSecure();
   const { user } = useAuth();
+
+  const { data: myUser } = useQuery({
+    queryKey: ['user', user?.email],
+    queryFn: async () => {
+      const res = await axiosSecure.get(`/user/byEmail?email=${user.email}`);
+      return res.data;
+    }
+  })
 
   const {
     register,
@@ -43,7 +52,7 @@ const PlaceOrder = () => {
 
     console.log(paymentInfo);
 
-    if (paymentInfo.paymentOptions === 'stripe') {
+    if (paymentInfo.paymentOptions === 'stripe' && myUser.adminApproval === 'approved') {
       console.log('add stripe checkout session')
       const res = await axiosSecure.post('/create-checkout-session', paymentInfo);
       console.log(res.data);
@@ -54,7 +63,7 @@ const PlaceOrder = () => {
         })
     }
     else {
-      axiosSecure.post('/orders', paymentInfo)
+      axiosSecure.post('/orders', { paymentInfo, adminApproval: myUser.adminApproval })
         .then(res => {
           console.log(res.data);
           if (res.data.insertedId) {

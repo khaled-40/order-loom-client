@@ -27,9 +27,15 @@ const ApprovedOrders = () => {
             return res.data;
         }
     })
-    console.log(product)
+    const { data: myUser } = useQuery({
+        queryKey: ['user', user?.email],
+        queryFn: async () => {
+            const res = await axiosSecure.get(`/user/byEmail?email=${user.email}`);
+            return res.data;
+        }
+    })
     const { data: orders = [], refetch } = useQuery({
-        queryKey: ['orders',product._id],
+        queryKey: ['orders', product._id],
         queryFn: async () => {
             const res = await axiosSecure.get(`/orders/by-product/${product._id}`);
             return res.data;
@@ -66,7 +72,8 @@ const ApprovedOrders = () => {
             status: trackingModal.step.label,
             trackingId: trackingModal.order.trackingId,
             location: trackingModal.location,
-            note: trackingModal.note
+            note: trackingModal.note,
+            adminApproval: myUser.adminApproval
         })
             .then(res => {
                 if (res.data.modifiedCount) {

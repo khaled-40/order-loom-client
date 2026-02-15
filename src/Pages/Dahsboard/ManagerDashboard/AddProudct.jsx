@@ -5,13 +5,20 @@ import { useForm } from 'react-hook-form';
 import useAxiosSecure from '../../../Hooks/useAxiosSecure';
 import useAuth from '../../../Hooks/useAuth';
 import Swal from 'sweetalert2';
+import { useQuery } from '@tanstack/react-query';
 
 const AddProudct = () => {
     const { user } = useAuth();
     const [imageURL, setImageURL] = useState(null);
     const [imageUploading, setImageUploading] = useState(false);
     const axiosSecure = useAxiosSecure();
-
+    const { data: myUser } = useQuery({
+        queryKey: ['user', user?.email],
+        queryFn: async () => {
+            const res = await axiosSecure.get(`/user/byEmail?email=${user.email}`);
+            return res.data;
+        }
+    })
     const categories = [
         "Shirt",
         "T-Shirt",
@@ -61,7 +68,7 @@ const AddProudct = () => {
         data.createdByUserEmail = user?.email;
         data.createdBy = user?.displayName;
         console.log(data);
-        axiosSecure.post('/products', data)
+        axiosSecure.post('/products', { data, adminApproval: myUser.adminApproval })
             .then(res => {
                 reset();
                 console.log(res)

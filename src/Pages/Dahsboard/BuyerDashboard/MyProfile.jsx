@@ -1,9 +1,19 @@
 import React from 'react';
 import useAuth from '../../../Hooks/useAuth';
 import { toast } from 'react-toastify';
+import { useQuery } from '@tanstack/react-query';
+import useAxiosSecure from '../../../Hooks/useAxiosSecure';
 
 const MyProfile = () => {
     const { user, signOutUser } = useAuth();
+    const axiosSecure = useAxiosSecure();
+    const { data: myUser } = useQuery({
+        queryKey: ['user', user?.email],
+        queryFn: async () => {
+            const res = await axiosSecure.get(`/user/byEmail?email=${user.email}`);
+            return res.data;
+        }
+    })
 
     const handleLogout = () => {
         signOutUser()
@@ -92,6 +102,10 @@ const MyProfile = () => {
                     >
                         Logout
                     </button>
+                    <br />
+                    {
+                        myUser?.adminApproval !== 'approved' && <h3 className='p-2 mt-2 badge badge-warning text-white'>{myUser?.adminApproval}</h3>
+                    }
                 </div>
             </div>
         </div>

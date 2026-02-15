@@ -13,6 +13,7 @@ import { CgProfile } from "react-icons/cg";
 import { CiLogout } from 'react-icons/ci';
 import useAuth from '../Hooks/useAuth';
 import { toast } from 'react-toastify';
+import Footer from '../Pages/Home/Footer';
 
 const DashboardLayout = () => {
     const { signOutUser } = useAuth();
@@ -70,6 +71,7 @@ const DashboardLayout = () => {
                 <main className="p-2 md:p-6 bg-base-100 min-h-screen max-w-7xl mx-auto w-full">
                     {/* Page Content */}
                     <Outlet></Outlet>
+                    <Footer></Footer>
                 </main>
             </div>
 
