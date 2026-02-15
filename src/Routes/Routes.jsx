@@ -20,6 +20,7 @@ import PendingOrders from "../Pages/Dahsboard/ManagerDashboard/PendingOrders";
 import ApprovedOrders from "../Pages/Dahsboard/ManagerDashboard/ApprovedOrders";
 import MyOrders from "../Pages/Dahsboard/BuyerDashboard/MyOrders";
 import TrackOrders from "../Pages/Dahsboard/BuyerDashboard/TrackOrders";
+import MyProfile from "../Pages/Dahsboard/BuyerDashboard/MyProfile";
 
 export const router = createBrowserRouter([
     {
@@ -108,6 +109,10 @@ export const router = createBrowserRouter([
             {
                 path: '/dashboard/my-orders',
                 Component: MyOrders,
+            },
+            {
+                path: '/dashboard/profile',
+                Component: MyProfile,
             },
             {
                 path: '/dashboard/track-order/:orderId',

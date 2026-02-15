@@ -9,10 +9,30 @@ import { MdOutlineAddShoppingCart, MdOutlinePendingActions } from 'react-icons/m
 import { FiBox } from "react-icons/fi";
 import { FcApprove } from "react-icons/fc";
 import useRole from '../Hooks/useRole';
+import { CgProfile } from "react-icons/cg";
+import { CiLogout } from 'react-icons/ci';
+import useAuth from '../Hooks/useAuth';
+import { toast } from 'react-toastify';
 
 const DashboardLayout = () => {
+    const { signOutUser } = useAuth();
     const role = useRole();
     console.log(role.role.role)
+    const handleLogout = () => {
+        signOutUser()
+            .then(() => {
+                toast.info("Session ended successfully", {
+                    style: {
+                        background: "linear-gradient(to right, #065F46, #334155)",
+                        color: "#fff",
+                    },
+                    autoClose: 2000,
+                });
+            })
+            .catch(error => {
+                console.log(error)
+            })
+    }
     return (
         <div className="drawer lg:drawer-open">
 
@@ -145,18 +165,16 @@ const DashboardLayout = () => {
                             </>
                         }
 
+                        {
+                            (role.role.role === 'buyer' || role.role.role === 'manager') && <>
+                                <li>
+                                    <Link to={'/dashboard/profile'} className="flex items-center gap-3 rounded-lg">
+                                        <CgProfile /> <span>My Profile</span>
+                                    </Link>
+                                </li>
+                            </>
+                        }
 
-                        <li>
-                            <a className="flex items-center gap-3 rounded-lg">
-                                📦 <span>Products</span>
-                            </a>
-                        </li>
-
-                        <li>
-                            <a className="flex items-center gap-3 rounded-lg">
-                                🛒 <span>Orders</span>
-                            </a>
-                        </li>
 
                         {/* CHANGE: Visual separation */}
                         <div className="divider my-2"></div>
@@ -165,16 +183,10 @@ const DashboardLayout = () => {
                             <span>Account</span>
                         </li>
 
-                        <li>
-                            <a className="flex items-center gap-3 rounded-lg">
-                                ⚙️ <span>Settings</span>
-                            </a>
-                        </li>
-
-                        <li>
-                            <a className="flex items-center gap-3 rounded-lg text-error">
-                                🚪 <span>Logout</span>
-                            </a>
+                        <li
+                            onClick={handleLogout}
+                        >
+                            <span className="flex items-center gap-3 rounded-lg "><CiLogout /> <span>Logout</span></span>
                         </li>
 
                     </ul>
