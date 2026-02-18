@@ -1,5 +1,5 @@
 // import React, { useMemo } from 'react';
-import { useLoaderData } from 'react-router';
+import { useParams } from 'react-router';
 import { useForm } from 'react-hook-form';
 import useAuth from '../../Hooks/useAuth';
 import useAxiosSecure from '../../Hooks/useAxiosSecure';
@@ -8,13 +8,24 @@ import Swal from 'sweetalert2';
 import { useQuery } from '@tanstack/react-query';
 
 const PlaceOrder = () => {
-  const product = useLoaderData();
-  // const quan = ();
-  // console.log(quan)
-  const [quantity, setQuantity] = useState(parseInt(product.minimumOrder));
-  const [checkoutUrl, setCheckoutUrl] = useState(null);
   const axiosSecure = useAxiosSecure();
   const { user } = useAuth();
+  const { id } = useParams();
+  const { data: product = {} } = useQuery({
+    queryKey: ['product', id],
+    queryFn: async () => {
+      const res = await axiosSecure.get(`/products/${id}`)
+      return res.data;
+    }
+  })
+  console.log(product)
+
+
+
+  const [quantity, setQuantity] = useState(product?.minimumOrder || 0);
+  const [checkoutUrl, setCheckoutUrl] = useState(null);
+
+
 
   const { data: myUser } = useQuery({
     queryKey: ['user', user?.email],
@@ -37,6 +48,7 @@ const PlaceOrder = () => {
 
 
   const totalPrice = quantity * product.price;
+  console.log(quantity, totalPrice, product.price)
 
   const onSubmit = async (data) => {
     setQuantity(data.quantity)
@@ -170,6 +182,7 @@ const PlaceOrder = () => {
             <input
               type="number"
               className="input input-bordered w-full"
+              defaultValue={product.minimumOrder}
               {...register('quantity', {
                 onChange: e => setQuantity(e.target.value),
                 required: true,

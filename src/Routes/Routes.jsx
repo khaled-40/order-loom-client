@@ -45,13 +45,11 @@ export const router = createBrowserRouter([
             },
             {
                 path: 'product-details/:id',
-                Component: ProductDetails,
-                loader: ({ params }) => fetch(`http://localhost:3000/products/${params.id}`).then(res => res.json())
+                Component: ProductDetails
             },
             {
                 path: 'place-order/:id',
-                Component: PlaceOrder,
-                loader: ({ params }) => fetch(`http://localhost:3000/products/${params.id}`).then(res => res.json())
+                Component: PlaceOrder
             },
         ]
     },
@@ -96,7 +94,7 @@ export const router = createBrowserRouter([
             {
                 path: '/dashboard/order-details/:id',
                 Component: OrderDetails,
-                loader: ({ params }) => fetch(`http://localhost:3000/orders/${params.id}`).then(res => res.json())
+                loader: ({ params }) => fetch(`https://order-loom-server.vercel.app/orders/${params.id}`).then(res => res.json())
             },
             {
                 path: '/dashboard/pending-orders',
@@ -117,7 +115,7 @@ export const router = createBrowserRouter([
             {
                 path: '/dashboard/track-order/:orderId',
                 Component: TrackOrders,
-                loader: ({ params }) => fetch(`http://localhost:3000/orders/${params.orderId}`).then(res => res.json())
+                loader: ({ params }) => fetch(`https://order-loom-server.vercel.app/orders/${params.orderId}`).then(res => res.json())
             },
         ]
     }

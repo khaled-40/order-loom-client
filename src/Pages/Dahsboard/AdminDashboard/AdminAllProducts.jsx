@@ -31,7 +31,6 @@ const AdminAllProducts = () => {
             return res.data;
         }
     });
-    console.log(products)
     const openEditModal = (product) => {
         setSelectedProduct(product)
         // reset(product);

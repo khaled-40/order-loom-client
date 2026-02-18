@@ -1,11 +1,21 @@
 
-import { useLoaderData, Link } from 'react-router';
+import { Link, useParams } from 'react-router';
 import useAuth from '../../Hooks/useAuth';
-// import useAuth from '../../Hooks/useAuth'; // assumed
+import { useQuery } from '@tanstack/react-query';
+import useAxiosSecure from '../../Hooks/useAxiosSecure';
 
 const ProductDetails = () => {
   const { user } = useAuth();
-  const product = useLoaderData();
+  const axiosSecure = useAxiosSecure();
+  const {id} = useParams();
+  const { data: product={} } = useQuery({
+    queryKey: ['product', id],
+    queryFn: async () => {
+      const res = await axiosSecure.get(`/products/${id}`)
+      return res.data;
+    }
+  })
+
 
   const role = 'buyer'; // 'admin' | 'manager' | 'buyer'
 
@@ -71,12 +81,12 @@ const ProductDetails = () => {
               Payment Option
             </h3>
             <div className="flex flex-wrap gap-2">
-                <span
-                  className="px-3 py-1 text-xs rounded-full border bg-base-200"
-                >
-                  {product.paymentOptions}
-                </span>
-              
+              <span
+                className="px-3 py-1 text-xs rounded-full border bg-base-200"
+              >
+                {product.paymentOptions}
+              </span>
+
             </div>
           </div>
 

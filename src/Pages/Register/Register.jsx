@@ -39,7 +39,7 @@ const Register = () => {
                             role: role,
                             photoURL: photoURL
                         }
-                        axios.post('http://localhost:3000/users', userInfo)
+                        axios.post('https://order-loom-server.vercel.app/users', userInfo)
                             .then(() => {
                                 console.log('account created')
                             })
@@ -82,7 +82,7 @@ const Register = () => {
                     role: 'buyer',
                     photoURL: result.user.photoURL
                 }
-                axios.post('http://localhost:3000/users', userInfo)
+                axios.post('https://order-loom-server.vercel.app/users', userInfo)
                     .then(() => {
                         console.log('account created')
                     })
