@@ -18,14 +18,11 @@ const PlaceOrder = () => {
       return res.data;
     }
   })
-  console.log(product)
 
 
 
   const [quantity, setQuantity] = useState(product?.minimumOrder || 0);
   const [checkoutUrl, setCheckoutUrl] = useState(null);
-
-
 
   const { data: myUser } = useQuery({
     queryKey: ['user', user?.email],

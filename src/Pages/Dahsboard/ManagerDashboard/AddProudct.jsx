@@ -151,8 +151,8 @@ const AddProudct = () => {
                     <select
                         {...register('paymentOptions', { required: true })}
                         className="select select-bordered w-full">
-                        <option>stripe</option>
                         <option>cod</option>
+                        <option>stripe</option>
                     </select>
                     {errors.paymentOptions?.type === 'required' && <p className='text-red-700'>Payment Option is required</p>}
                 </div>

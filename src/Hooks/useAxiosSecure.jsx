@@ -8,38 +8,37 @@ const axiosSecure = axios.create({
 })
 
 const useAxiosSecure = () => {
-    const { user, logOut } = useAuth();
+    const { user, signOutUser } = useAuth();
     const navigate = useNavigate();
     useEffect(() => {
-        const reqInterceptor = axiosSecure.interceptors.request.use(
-            async (config) => {
-                if (user) {
-                    const token = await user.getIdToken();
-                    config.headers.Authorization = `Bearer ${token}`;
-                }
-                return config;
+        const reqInterceptors = axiosSecure.interceptors.request.use(config => {
+            config.headers.Authorization = `Bearer ${user?.accessToken}`
+            return config;
+        })
+
+        // response Interceptors 
+        const resInterceptors = axiosSecure.interceptors.response.use((response) => {
+            return response;
+        }, (error) => {
+            console.log(error)
+
+            const statusCode = error.status;
+            if (statusCode === 401 || statusCode === 403) {
+                // signOutUser()
+                //     .then(() => {
+                //         navigate('/auth/login')
+                //     })
             }
-        );
 
-        const resInterceptor = axiosSecure.interceptors.response.use(
-            response => response,
-            async (error) => {
-                const statusCode = error.response?.status;
 
-                if (statusCode === 401 || statusCode === 403) {
-                    await logOut();
-                    navigate('/login');
-                }
-
-                return Promise.reject(error);
-            }
-        );
+            return Promise.reject(error)
+        })
 
         return () => {
-            axiosSecure.interceptors.request.eject(reqInterceptor);
-            axiosSecure.interceptors.response.eject(resInterceptor);
-        };
-    }, [user, logOut, navigate]);
+            axiosSecure.interceptors.request.eject(reqInterceptors);
+            axiosSecure.interceptors.response.eject(resInterceptors);
+        }
+    }, [user, signOutUser, navigate])
     return axiosSecure;
 };
 
