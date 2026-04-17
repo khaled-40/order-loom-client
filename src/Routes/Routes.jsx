@@ -93,8 +93,7 @@ export const router = createBrowserRouter([
             },
             {
                 path: '/dashboard/order-details/:id',
-                Component: OrderDetails,
-                loader: ({ params }) => fetch(`https://order-loom-server.vercel.app/orders/${params.id}`).then(res => res.json())
+                Component: OrderDetails
             },
             {
                 path: '/dashboard/pending-orders',
@@ -113,7 +112,7 @@ export const router = createBrowserRouter([
                 Component: MyProfile,
             },
             {
-                path: '/dashboard/track-order/:orderId',
+                path: '/dashboard/track-order/:trackingId',
                 Component: TrackOrders
             },
         ]

@@ -104,7 +104,7 @@ const MyProfile = () => {
                     </button>
                     <br />
                     {
-                        myUser?.adminApproval !== 'approved' && <h3 className='p-2 mt-2 badge badge-warning text-white'>{myUser?.adminApproval}</h3>
+                        myUser?.adminApproval === 'approved' ? <h3 className='p-2 mt-2 badge badge-success text-white'>{myUser?.adminApproval}</h3> : <h3 className='p-2 mt-2 badge badge-warning text-white'>{myUser?.adminApproval}</h3>
                     }
                 </div>
             </div>

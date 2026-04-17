@@ -71,7 +71,7 @@ const MyOrders = () => {
                                         <MdPreview />
                                     </button>
                                 </Link>
-                                <Link to={`/dashboard/track-order/${order._id}`}>
+                                <Link to={`/dashboard/track-order/${order.trackingId}`}>
                                     <button className='btn btn-sm btn-primary mr-1'>
                                         Track Order
                                     </button>

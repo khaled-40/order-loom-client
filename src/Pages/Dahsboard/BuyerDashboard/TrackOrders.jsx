@@ -1,10 +1,10 @@
 import React from 'react';
-import { useLoaderData } from 'react-router';
+import { useParams } from 'react-router';
 import { useQuery } from '@tanstack/react-query';
 import useAxiosSecure from '../../../Hooks/useAxiosSecure';
 
 const TrackOrders = () => {
-    const { trackingId } = useLoaderData();
+    const { trackingId } = useParams();
     console.log(trackingId)
     const axiosSecure = useAxiosSecure();
 
@@ -16,6 +16,7 @@ const TrackOrders = () => {
         },
         enabled: !!trackingId
     });
+    console.log(trackings)
 
     if (isLoading) return <p>Loading...</p>;
 

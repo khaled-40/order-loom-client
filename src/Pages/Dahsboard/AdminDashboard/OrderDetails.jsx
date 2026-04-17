@@ -1,11 +1,22 @@
+import { useQuery } from "@tanstack/react-query";
 import React from "react";
 import { IoArrowBackOutline } from "react-icons/io5";
-import { useLoaderData, useNavigate } from "react-router";
+import { useNavigate, useParams } from "react-router";
+import useAxiosSecure from "../../../Hooks/useAxiosSecure";
 
 const OrderDetails = () => {
-    const order = useLoaderData();
+    const { id } = useParams();
+    const axiosSecure = useAxiosSecure();
     const navigate = useNavigate();
-    console.log(order)
+    console.log(id)
+    const { data: order = {} } = useQuery({
+        queryKey: ['order', id],
+        enabled: !!id,
+        queryFn: async () => {
+            const res = await axiosSecure(`/orders/${id}`);
+            return res.data;
+        }
+    })
     const {
         _id,
         status,
@@ -122,10 +133,10 @@ const OrderDetails = () => {
 
             {/* Actions */}
             <div className="flex justify-end gap-3">
-                <button 
-                onClick={handleGoBack}
-                className="btn btn-primary">
-                  <IoArrowBackOutline />  Back
+                <button
+                    onClick={handleGoBack}
+                    className="btn btn-primary">
+                    <IoArrowBackOutline />  Back
                 </button>
             </div>
         </div>
