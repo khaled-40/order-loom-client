@@ -18,6 +18,7 @@ import Footer from '../Pages/Home/Footer';
 const DashboardLayout = () => {
     const { signOutUser } = useAuth();
     const role = useRole();
+    const {roleLoading} = useRole();
     console.log(role.role.role)
     const handleLogout = () => {
         signOutUser()
@@ -33,6 +34,9 @@ const DashboardLayout = () => {
             .catch(error => {
                 console.log(error)
             })
+    }
+    if(roleLoading){
+        return <span className="loading loading-spinner text-success"></span>
     }
     return (
         <div className="drawer lg:drawer-open">

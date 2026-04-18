@@ -8,7 +8,7 @@ const ManageUsers = () => {
     const axiosSecure = useAxiosSecure();
     const [user, setUser] = useState(null);
     const editModalRef = useRef();
-    const { data: users = [], refetch } = useQuery({
+    const { data: users = [], refetch, isLoading } = useQuery({
         queryKey: ['users'],
         queryFn: async () => {
             const res = await axiosSecure.get('/users');
@@ -45,23 +45,30 @@ const ManageUsers = () => {
                     </thead>
                     <tbody>
                         {
-                            users.map((user, index) => <tr key={user._id}>
-                                <th>{index + 1}</th>
-                                <td>{user.name}</td>
-                                <td>{user.email}</td>
-                                <td className='space-x-1'>
-                                    <button
-                                        className='btn btn-sm'
-                                        onClick={() => handleEditModal(user)}
-                                    ><FiEdit />
-                                    </button>
-                                    <button
+                            isLoading ? (
+                                <tr>
+                                    <td colSpan="4" className="text-center py-6">
+                                        <span className="loading loading-spinner text-neutral"></span>
+                                    </td>
+                                </tr>
+                            ) :
+                                users.map((user, index) => <tr key={user._id}>
+                                    <th>{index + 1}</th>
+                                    <td>{user.name}</td>
+                                    <td>{user.email}</td>
+                                    <td className='space-x-1'>
+                                        <button
+                                            className='btn btn-sm'
+                                            onClick={() => handleEditModal(user)}
+                                        ><FiEdit />
+                                        </button>
+                                        <button
 
-                                        className='btn btn-sm'>
-                                        <MdDelete />
-                                    </button>
-                                </td>
-                            </tr>)
+                                            className='btn btn-sm'>
+                                            <MdDelete />
+                                        </button>
+                                    </td>
+                                </tr>)
                         }
                     </tbody>
                 </table>

@@ -9,6 +9,7 @@ const useRole = () => {
     const email = user?.email ? encodeURIComponent(user.email) : null;
     const { isLoading: roleLoading, data: role = 'user' } = useQuery({
         queryKey: ['user-role', email],
+        enabled: !!email,
         queryFn: async () => {
             const res = await axiosSecure.get(`/user/${email}/role`);
 

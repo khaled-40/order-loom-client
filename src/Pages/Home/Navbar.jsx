@@ -4,17 +4,24 @@ import './Navbar.css';
 import useAuth from '../../Hooks/useAuth';
 import { CiLogout } from "react-icons/ci";
 import { toast } from 'react-toastify';
+import useRole from '../../Hooks/useRole';
 
 
 
 const Navbar = () => {
     const { user, signOutUser } = useAuth();
+    const { role, roleLoading } = useRole();
+    if (roleLoading) {
+        return null;
+    }
+    const userRole = role.role;
+    const dashboardRoute = userRole === 'admin' ? '/dashboard/manage-users' : userRole === 'manager' ? '/dashboard/add-product' : '/dashboard/my-orders';
     const links = <>
         <li><NavLink to={'/'}>Home</NavLink></li>
         <li><NavLink to={'/all-products'}>All Products</NavLink></li>
         {
             user ?
-                <li><NavLink to={'/dashboard'}>Dashboard</NavLink></li>
+                <li><NavLink to={dashboardRoute}>Dashboard</NavLink></li>
                 :
                 <><li><NavLink to={'/contact'}>Contact</NavLink></li>
                     <li><NavLink to={'/about-us'}>About Us</NavLink></li>
@@ -66,7 +73,7 @@ const Navbar = () => {
                             <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar">
                                 <div className="w-10 rounded-full">
                                     <img
-                                        src={user?.photoURL }
+                                        src={user?.photoURL}
                                         alt="user avatar"
                                     />
                                 </div>
