@@ -51,12 +51,10 @@ const PlaceOrder = () => {
     setQuantity(data.quantity)
     const paymentInfo = {
       ...data,
-      email: user.email,
+      buyer_email: user.email,
       productId: product._id,
-      productTitle: product.title,
-      unitPrice: product.price,
-      totalPrice,
-      paymentOptions: product.paymentOptions
+      product:product.title,
+      manager_email: product.createdByUserEmail
     };
 
     console.log(paymentInfo);

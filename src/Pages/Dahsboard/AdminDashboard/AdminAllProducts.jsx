@@ -23,7 +23,7 @@ const AdminAllProducts = () => {
     const { register, handleSubmit, formState: { errors }, reset } = useForm();
     const axiosSecure = useAxiosSecure();
     const editModalRef = useRef();
-    const { data: products = [], refetch } = useQuery({
+    const { data: products = [], refetch, isLoading } = useQuery({
         queryKey: ['products'],
         queryFn: async () => {
             const res = await axiosSecure.get('/products');
@@ -117,43 +117,51 @@ const AdminAllProducts = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {products.map(product => <tr key={product._id}>
-                                <td>
-                                    <div className="flex items-center gap-3">
-                                        <div className="avatar">
-                                            <div className="mask mask-squircle h-12 w-12">
-                                                <img
-                                                    src={product.images}
-                                                    alt="Product Image" />
+                        {
+                            isLoading ? (
+                                <tr>
+                                    <td colSpan="7" className="text-center py-6">
+                                        <span className="loading loading-spinner text-neutral"></span>
+                                    </td>
+                                </tr>
+                            ) :
+                                products.map(product => <tr key={product._id}>
+                                    <td>
+                                        <div className="flex items-center gap-3">
+                                            <div className="avatar">
+                                                <div className="mask mask-squircle h-12 w-12">
+                                                    <img
+                                                        src={product.images}
+                                                        alt="Product Image" />
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                </td>
-                                <td>{product.title}</td>
-                                <td>$ {product.price}</td>
-                                <td>{product.category}</td>
-                                <td>{product?.createdBy}</td>
-                                <td className="text-center">
-                                    <input
-                                        type="checkbox"
-                                        defaultChecked={product.showOnHome}
-                                        onChange={() => handleShowOnHomeToggle(product._id, product.showOnHome)}
-                                        className="w-5 h-5 cursor-pointer accent-emerald-600"
-                                    />
-                                </td>
-                                <td className='space-x-1'>
-                                    <button
-                                        className='btn btn-sm'
-                                        onClick={() => openEditModal(product)}
-                                    ><FiEdit />
-                                    </button>
-                                    <button
-                                        onClick={() => handleProductDelete(product._id)}
-                                        className='btn btn-sm'>
-                                        <MdDelete />
-                                    </button>
-                                </td>
-                            </tr>)
+                                    </td>
+                                    <td>{product.title}</td>
+                                    <td>$ {product.price}</td>
+                                    <td>{product.category}</td>
+                                    <td>{product?.createdBy}</td>
+                                    <td className="text-center">
+                                        <input
+                                            type="checkbox"
+                                            defaultChecked={product.showOnHome}
+                                            onChange={() => handleShowOnHomeToggle(product._id, product.showOnHome)}
+                                            className="w-5 h-5 cursor-pointer accent-emerald-600"
+                                        />
+                                    </td>
+                                    <td className='space-x-1'>
+                                        <button
+                                            className='btn btn-sm'
+                                            onClick={() => openEditModal(product)}
+                                        ><FiEdit />
+                                        </button>
+                                        <button
+                                            onClick={() => handleProductDelete(product._id)}
+                                            className='btn btn-sm'>
+                                            <MdDelete />
+                                        </button>
+                                    </td>
+                                </tr>)
                         }
 
                     </tbody>

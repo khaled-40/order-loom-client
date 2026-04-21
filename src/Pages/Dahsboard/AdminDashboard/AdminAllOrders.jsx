@@ -6,7 +6,7 @@ import { Link } from 'react-router';
 
 const AdminAllOrders = () => {
     const axiosSecure = useAxiosSecure();
-    const { data: orders = [] } = useQuery({
+    const { data: orders = [],isLoading } = useQuery({
         queryKey: ['orders', 'pending'],
         queryFn: async () => {
             const res = await axiosSecure.get('/orders');
@@ -32,20 +32,27 @@ const AdminAllOrders = () => {
                     </thead>
                     <tbody>
                         {
-                            orders.map(order => <tr key={order._id}>
-                                <th>{order._id}</th>
-                                <td>{order.firstName}</td>
-                                <td>{order.productTitle}</td>
-                                <td>{order.quantity}</td>
-                                <td>{order.status}</td>
-                                <td>
-                                    <Link to={`/dashboard/order-details/${order._id}`}>
-                                        <button className='btn btn-sm'>
-                                            <MdPreview />
-                                        </button>
-                                    </Link>
-                                </td>
-                            </tr>)
+                            isLoading ? (
+                                <tr>
+                                    <td colSpan="6" className="text-center py-6">
+                                        <span className="loading loading-spinner text-neutral"></span>
+                                    </td>
+                                </tr>
+                            ) :
+                                orders.map(order => <tr key={order._id}>
+                                    <th>{order._id}</th>
+                                    <td>{order.firstName}</td>
+                                    <td>{order.productTitle}</td>
+                                    <td>{order.quantity}</td>
+                                    <td>{order.status}</td>
+                                    <td>
+                                        <Link to={`/dashboard/order-details/${order._id}`}>
+                                            <button className='btn btn-sm'>
+                                                <MdPreview />
+                                            </button>
+                                        </Link>
+                                    </td>
+                                </tr>)
                         }
 
                     </tbody>

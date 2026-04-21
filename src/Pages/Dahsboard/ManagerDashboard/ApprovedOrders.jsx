@@ -7,6 +7,7 @@ import Swal from 'sweetalert2';
 const ApprovedOrders = () => {
     const { user } = useAuth();
     const axiosSecure = useAxiosSecure();
+    const email = user?.email ? user.email : null;
     const openModalRef = useRef();
     const [trackingModal, setTrackingModal] = useState({
         open: false,
@@ -20,13 +21,13 @@ const ApprovedOrders = () => {
         location: '',
         note: '',
     });
-    const { data: product = [] } = useQuery({
-        queryKey: ['product', user?.email],
-        queryFn: async () => {
-            const res = await axiosSecure.get(`/products/byEmail?email=${user.email}`);
-            return res.data;
-        }
-    })
+    // const { data: product = [] } = useQuery({
+    //     queryKey: ['product', user?.email],
+    //     queryFn: async () => {
+    //         const res = await axiosSecure.get(`/products/byEmail?email=${user.email}`);
+    //         return res.data;
+    //     }
+    // })
     const { data: myUser } = useQuery({
         queryKey: ['user', user?.email],
         queryFn: async () => {
@@ -35,9 +36,9 @@ const ApprovedOrders = () => {
         }
     })
     const { data: orders = [], refetch } = useQuery({
-        queryKey: ['orders', product._id],
+        queryKey: ['orders', email],
         queryFn: async () => {
-            const res = await axiosSecure.get(`/orders/by-product/${product._id}`);
+            const res = await axiosSecure.get(`/orders/by-manager-email`);
             return res.data;
         }
     })

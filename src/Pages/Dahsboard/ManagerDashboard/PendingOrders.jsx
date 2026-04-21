@@ -9,25 +9,27 @@ import Swal from 'sweetalert2';
 const PendingOrders = () => {
     const { user } = useAuth();
     const axiosSecure = useAxiosSecure();
-    const { data: product } = useQuery({
-        queryKey: ['product', user?.email],
-        queryFn: async () => {
-            const res = await axiosSecure.get(`/products/byEmail?email=${user?.email}`);
-            console.log(res.data)
-            return res.data;
-        }
-    })
+    const email = user?.email ? user.email : null;
+    const userEmail = user?.email ? encodeURIComponent(user.email) : null;
+    // const { data: product } = useQuery({
+    //     queryKey: ['product', user?.email],
+    //     queryFn: async () => {
+    //         const res = await axiosSecure.get(`/products/byEmail?email=${user?.email}`);
+    //         console.log(res.data)
+    //         return res.data;
+    //     }
+    // })
     const { data: myUser } = useQuery({
-        queryKey: ['user', user?.email],
+        queryKey: ['user', userEmail],
         queryFn: async () => {
-            const res = await axiosSecure.get(`/user/byEmail?email=${user.email}`);
+            const res = await axiosSecure.get(`/user/byEmail?email=${userEmail}`);
             return res.data;
         }
     })
     const { data: orders = [], refetch } = useQuery({
-        queryKey: ['orders', 'pending', product?._id],
+        queryKey: ['orders', 'pending', email],
         queryFn: async () => {
-            const res = await axiosSecure.get(`/orders/by-product/${product?._id}?status=pending`);
+            const res = await axiosSecure.get(`/orders/by-manager-email?status=pending`);
             return res.data;
         }
     })
