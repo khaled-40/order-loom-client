@@ -19,7 +19,7 @@ const PlaceOrder = () => {
     }
   })
 
-
+  console.log(product)
 
   const [quantity, setQuantity] = useState(product?.minimumOrder || 0);
   const [checkoutUrl, setCheckoutUrl] = useState(null);
@@ -31,6 +31,11 @@ const PlaceOrder = () => {
       return res.data;
     }
   })
+
+  console.log(myUser?.adminApproval)
+  if (product.paymentOptions === 'stripe' && myUser?.adminApproval === 'approved') {
+    console.log('true')
+  }
 
   const {
     register,
@@ -53,36 +58,64 @@ const PlaceOrder = () => {
       ...data,
       buyer_email: user.email,
       productId: product._id,
-      product:product.title,
+      product: product.title,
+      unit_price: parseInt(product.price),
+      total_price: totalPrice,
       manager_email: product.createdByUserEmail
     };
 
     console.log(paymentInfo);
 
-    if (paymentInfo.paymentOptions === 'stripe' && myUser.adminApproval === 'approved') {
+    if (product.paymentOptions === 'stripe') {
       console.log('add stripe checkout session')
       const res = await axiosSecure.post('/create-checkout-session', paymentInfo);
       console.log(res.data);
       setCheckoutUrl(res.data.url);
-      axiosSecure.post('/orders', paymentInfo)
-        .then(res => {
-          console.log(res.data)
-        })
+
+      try {
+        axiosSecure.post('/orders', { paymentInfo, adminApproval: myUser.adminApproval })
+          .then(res => {
+            console.log(res.data)
+          })
+      }
+      catch (error) {
+        console.error(error);
+
+        Swal.fire({
+          icon: "error",
+          title: "Payment Failed",
+          text: error.response?.data?.message || error.message || "Something went wrong",
+          footer: '<a href="#">Why did this happen?</a>'
+        });
+      }
+
+
     }
     else {
-      axiosSecure.post('/orders', { paymentInfo, adminApproval: myUser.adminApproval })
-        .then(res => {
-          console.log(res.data);
-          if (res.data.insertedId) {
-            Swal.fire({
-              position: "top-end",
-              icon: "success",
-              title: "Your order has been placed",
-              showConfirmButton: false,
-              timer: 1500
-            });
-          }
-        })
+      try {
+       const placeOrderRes = await axiosSecure.post('/orders', { paymentInfo, adminApproval: myUser.adminApproval })
+
+            console.log(placeOrderRes.data);
+            if (placeOrderRes.data.insertedId) {
+              Swal.fire({
+                position: "top-end",
+                icon: "success",
+                title: "Your order has been placed",
+                showConfirmButton: false,
+                timer: 1500
+              });
+            }
+      }
+      catch (error) {
+        console.error(error);
+
+        Swal.fire({
+          icon: "error",
+          title: "Payment Failed",
+          text: error.response?.data?.message || error.message || "Something went wrong",
+          footer: '<a href="#">Why did this happen?</a>'
+        });
+      }
     }
   };
   useEffect(() => {

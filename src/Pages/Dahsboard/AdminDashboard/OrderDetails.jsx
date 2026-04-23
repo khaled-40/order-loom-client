@@ -20,7 +20,7 @@ const OrderDetails = () => {
     const {
         _id,
         status,
-        productTitle,
+        productId,
         unitPrice,
         quantity,
         totalPrice,

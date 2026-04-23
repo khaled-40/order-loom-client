@@ -74,7 +74,7 @@ const PendingOrders = () => {
                             orders.map(order => <tr key={order._id}>
                                 <th>{order._id}</th>
                                 <td>{order.firstName}</td>
-                                <td>{order.productTitle}</td>
+                                <td>{order.product}</td>
                                 <td>{order.quantity}</td>
                                 <td>{new Date(order.placedAt).toLocaleString()}</td>
                                 <td className='space-x-1'>
