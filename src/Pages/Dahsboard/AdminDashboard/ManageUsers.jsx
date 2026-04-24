@@ -3,9 +3,11 @@ import useAxiosSecure from '../../../Hooks/useAxiosSecure';
 import { useQuery } from '@tanstack/react-query';
 import { FiEdit } from "react-icons/fi";
 import { MdDelete } from "react-icons/md";
+import Swal from 'sweetalert2';
 
 const ManageUsers = () => {
     const axiosSecure = useAxiosSecure();
+    const [statusLoading, setStatusLoading] = useState(false);
     const [user, setUser] = useState(null);
     const editModalRef = useRef();
     const { data: users = [], refetch, isLoading } = useQuery({
@@ -19,14 +21,35 @@ const ManageUsers = () => {
         setUser(user);
         editModalRef.current.showModal();
     }
-    const handleStatusChange = status => {
+    const handleStatusChange = async (status) => {
+        setStatusLoading(true)
         const approval = { status };
-        axiosSecure.patch(`/users/${user._id}`, approval)
-            .then(res => {
-                refetch();
-                editModalRef.current.close();
-                console.log(res.data)
-            })
+        try {
+            const statusChangeRes = await axiosSecure.patch(`/users/${user._id}`, approval);
+            refetch();
+            editModalRef.current.close();
+            if (statusChangeRes.data.modifiedCount) {
+                Swal.fire({
+                    position: "top-end",
+                    icon: "success",
+                    title: `This user has been ${status}`,
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+            }
+        } catch (error) {
+            console.error(error);
+
+            Swal.fire({
+                icon: "error",
+                title: "Payment Failed",
+                text: error.response?.data?.message || error.message || "Something went wrong",
+                footer: '<a href="#">Why did this happen?</a>'
+            });
+        } finally {
+            setStatusLoading(false)
+        }
+
         // console.log(approval)
     }
     return (
@@ -111,14 +134,14 @@ const ManageUsers = () => {
                                 onClick={() => handleStatusChange('approved')}
                                 className={`btn btn-primary ${user?.adminApproval === 'approved' ? 'hidden' : ''}`}
                             >
-                                Approve
+                                {statusLoading ? <span className="loading loading-spinner text-info"></span> : 'Approve'}
                             </button>
 
                             <button
                                 onClick={() => handleStatusChange('suspended')}
                                 className={`btn btn-error ${user?.adminApproval === 'suspended' ? 'hidden' : ''}`}
                             >
-                                Suspend
+                                {statusLoading ? <span className="loading loading-spinner text-neutral"></span> : 'Suspend'}
                             </button>
                         </div>
                     </div>

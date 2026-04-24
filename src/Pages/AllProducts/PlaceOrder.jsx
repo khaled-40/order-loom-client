@@ -8,21 +8,10 @@ import Swal from 'sweetalert2';
 import { useQuery } from '@tanstack/react-query';
 
 const PlaceOrder = () => {
+  const [isSubmiting, setIsSubmiting] = useState(false);
   const axiosSecure = useAxiosSecure();
   const { user } = useAuth();
   const { id } = useParams();
-  const { data: product = {} } = useQuery({
-    queryKey: ['product', id],
-    queryFn: async () => {
-      const res = await axiosSecure.get(`/products/${id}`)
-      return res.data;
-    }
-  })
-
-  console.log(product)
-
-  const [quantity, setQuantity] = useState(product?.minimumOrder || 0);
-  const [checkoutUrl, setCheckoutUrl] = useState(null);
 
   const { data: myUser } = useQuery({
     queryKey: ['user', user?.email],
@@ -32,10 +21,20 @@ const PlaceOrder = () => {
     }
   })
 
-  console.log(myUser?.adminApproval)
-  if (product.paymentOptions === 'stripe' && myUser?.adminApproval === 'approved') {
-    console.log('true')
-  }
+  const { data: product = {}, isLoading } = useQuery({
+    queryKey: ['product', id],
+    queryFn: async () => {
+      const res = await axiosSecure.get(`/products/${id}`)
+      return res.data;
+    }
+  })
+
+  const [quantity, setQuantity] = useState(product?.minimumOrder || 0);
+  const [totalPrice, setTotalPrice] = useState(0);
+  const [unitPrice, setUnitPrice] = useState(0);
+  const [checkoutUrl, setCheckoutUrl] = useState(null);
+
+
 
   const {
     register,
@@ -48,11 +47,22 @@ const PlaceOrder = () => {
     },
   });
 
+  useEffect(() => {
+    if (product?.minimumOrder) {
+      setQuantity(product.minimumOrder);
+    }
+    if (product?.price) {
+      setUnitPrice(parseInt(product.price))
+    }
+  }, [product]);
 
-  const totalPrice = quantity * product.price;
-  console.log(quantity, totalPrice, product.price)
+  useEffect(() => {
+    setTotalPrice(quantity * unitPrice);
+  }, [quantity, unitPrice])
+
 
   const onSubmit = async (data) => {
+    setIsSubmiting(true);
     setQuantity(data.quantity)
     const paymentInfo = {
       ...data,
@@ -68,15 +78,15 @@ const PlaceOrder = () => {
 
     if (product.paymentOptions === 'stripe') {
       console.log('add stripe checkout session')
-      const res = await axiosSecure.post('/create-checkout-session', paymentInfo);
-      console.log(res.data);
-      setCheckoutUrl(res.data.url);
+
+
 
       try {
-        axiosSecure.post('/orders', { paymentInfo, adminApproval: myUser.adminApproval })
-          .then(res => {
-            console.log(res.data)
-          })
+        const placeOrderRes = await axiosSecure.post('/orders', { paymentInfo, adminApproval: myUser.adminApproval })
+        console.log(placeOrderRes.data)
+        const sessionRes = await axiosSecure.post('/create-checkout-session', paymentInfo);
+        console.log(sessionRes.data);
+        setCheckoutUrl(sessionRes.data.url);
       }
       catch (error) {
         console.error(error);
@@ -88,23 +98,27 @@ const PlaceOrder = () => {
           footer: '<a href="#">Why did this happen?</a>'
         });
       }
+      finally {
+        setIsSubmiting(false);
+      }
+
 
 
     }
     else {
       try {
-       const placeOrderRes = await axiosSecure.post('/orders', { paymentInfo, adminApproval: myUser.adminApproval })
+        const placeOrderRes = await axiosSecure.post('/orders', { paymentInfo, adminApproval: myUser.adminApproval })
 
-            console.log(placeOrderRes.data);
-            if (placeOrderRes.data.insertedId) {
-              Swal.fire({
-                position: "top-end",
-                icon: "success",
-                title: "Your order has been placed",
-                showConfirmButton: false,
-                timer: 1500
-              });
-            }
+        console.log(placeOrderRes.data);
+        if (placeOrderRes.data.insertedId) {
+          Swal.fire({
+            position: "top-end",
+            icon: "success",
+            title: "Your order has been placed",
+            showConfirmButton: false,
+            timer: 1500
+          });
+        }
       }
       catch (error) {
         console.error(error);
@@ -115,6 +129,9 @@ const PlaceOrder = () => {
           text: error.response?.data?.message || error.message || "Something went wrong",
           footer: '<a href="#">Why did this happen?</a>'
         });
+      }
+      finally {
+        setIsSubmiting(false)
       }
     }
   };
@@ -124,6 +141,10 @@ const PlaceOrder = () => {
       window.location.assign(checkoutUrl);
     }
   }, [checkoutUrl]);
+
+  if (isLoading) {
+    return <span className="loading loading-spinner text-neutral"></span>;
+  }
 
   return (
     <section className="max-w-6xl mx-auto px-4 py-10">
@@ -168,7 +189,7 @@ const PlaceOrder = () => {
             <input
               readOnly
               className="input input-bordered w-full bg-base-200"
-              defaultValue={`$${product.price}`}
+              defaultValue={`$ ${product?.price}`}
             />
           </div>
 
@@ -212,7 +233,7 @@ const PlaceOrder = () => {
               className="input input-bordered w-full"
               defaultValue={product.minimumOrder}
               {...register('quantity', {
-                onChange: e => setQuantity(e.target.value),
+                onChange: e => setQuantity(Number(e.target.value)),
                 required: true,
                 valueAsNumber: true,
                 min: product.minimumOrder,
@@ -232,7 +253,7 @@ const PlaceOrder = () => {
             <input
               readOnly
               className="input input-bordered w-full bg-base-200 font-semibold"
-              value={`$${totalPrice.toFixed(2)}`}
+              value={`$${totalPrice?.toFixed(2)}`}
             />
           </div>
 
@@ -286,7 +307,9 @@ const PlaceOrder = () => {
           </div>
 
           <button className="btn btn-primary w-full text-lg">
-            Place Order
+            {
+              isSubmiting ? <span className="loading loading-spinner text-info"></span> : 'Place Order'
+            }
           </button>
         </form>
 
@@ -316,7 +339,7 @@ const PlaceOrder = () => {
           <div className="flex justify-between text-sm">
             <span>Total</span>
             <span className="font-semibold">
-              ${totalPrice.toFixed(2)}
+              ${totalPrice?.toFixed(2)}
             </span>
           </div>
         </aside>
