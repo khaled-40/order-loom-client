@@ -7,6 +7,7 @@ import { FaEyeSlash } from "react-icons/fa";
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import Swal from 'sweetalert2';
+import useAxiosSecure from '../../Hooks/useAxiosSecure';
 
 
 const Register = () => {
@@ -47,7 +48,7 @@ const Register = () => {
                 photoURL: photoURL
             };
 
-            await axios.post('https://order-loom-server.vercel.app/users', userInfo);
+            await useAxiosSecure.post('/users', userInfo);
 
             // 4. Update profile
             await updateUserProfile({
@@ -90,10 +91,7 @@ const Register = () => {
                 photoURL: result.user.photoURL || ""
             };
 
-            const res = await axios.post(
-                'https://order-loom-server.vercel.app/users',
-                userInfo
-            );
+            const res = await useAxiosSecure.post('/users', userInfo);
 
             // ✅ Verify before showing success
             if (res.data?.insertedId) {
