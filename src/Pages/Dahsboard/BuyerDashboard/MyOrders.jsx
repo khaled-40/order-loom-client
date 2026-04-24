@@ -9,7 +9,7 @@ import Swal from 'sweetalert2';
 const MyOrders = () => {
     const { user } = useAuth();
     const axiosSecure = useAxiosSecure();
-    const { data: orders = [],refetch } = useQuery({
+    const { data: orders = [], refetch, isLoading } = useQuery({
         queryKey: ['orders', user?.email],
         queryFn: async () => {
             const res = await axiosSecure.get(`/orders/byEmail?email=${user.email}`)
@@ -59,33 +59,41 @@ const MyOrders = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {orders.map(order => <tr key={order._id}>
-                            <td>{order._id}</td>
-                            <td>{order.productTitle}</td>
-                            <td>{order.quantity}</td>
-                            <td>{order.status}</td>
-                            <td>{order?.payment}</td>
-                            <td>
-                                <Link to={`/dashboard/order-details/${order._id}`}>
-                                    <button className='btn btn-sm mr-1'>
-                                        <MdPreview />
-                                    </button>
-                                </Link>
-                                <Link to={`/dashboard/track-order/${order.trackingId}`}>
-                                    <button className='btn btn-sm btn-primary mr-1'>
-                                        Track Order
-                                    </button>
-                                </Link>
-                                {
-                                    order.status === 'pending' &&
-                                    <button
-                                        onClick={() => handleCancel(order._id)}
-                                        className="btn btn-sm">
-                                        Cancel
-                                    </button>
-                                }
-                            </td>
-                        </tr>)}
+                        {
+                            isLoading ? (
+                                <tr>
+                                    <td colSpan="6" className="text-center py-6">
+                                        <span className="loading loading-spinner text-neutral"></span>
+                                    </td>
+                                </tr>
+                            ) :
+                                (orders.map(order => <tr key={order._id}>
+                                    <td>{order._id}</td>
+                                    <td>{order.productTitle}</td>
+                                    <td>{order.quantity}</td>
+                                    <td>{order.status}</td>
+                                    <td>{order?.payment}</td>
+                                    <td>
+                                        <Link to={`/dashboard/order-details/${order._id}`}>
+                                            <button className='btn btn-sm mr-1'>
+                                                <MdPreview />
+                                            </button>
+                                        </Link>
+                                        <Link to={`/dashboard/track-order/${order.trackingId}`}>
+                                            <button className='btn btn-sm btn-primary mr-1'>
+                                                Track Order
+                                            </button>
+                                        </Link>
+                                        {
+                                            order.status === 'pending' &&
+                                            <button
+                                                onClick={() => handleCancel(order._id)}
+                                                className="btn btn-sm">
+                                                Cancel
+                                            </button>
+                                        }
+                                    </td>
+                                </tr>))}
 
                     </tbody>
                 </table>

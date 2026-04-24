@@ -35,7 +35,7 @@ const ApprovedOrders = () => {
             return res.data;
         }
     })
-    const { data: orders = [], refetch } = useQuery({
+    const { data: orders = [], refetch, isLoading } = useQuery({
         queryKey: ['orders', email],
         queryFn: async () => {
             const res = await axiosSecure.get(`/orders/by-manager-email`);
@@ -108,28 +108,35 @@ const ApprovedOrders = () => {
                     </thead>
                     <tbody>
                         {
-                            orders.map(order => <tr key={order._id}>
-                                <th>{order._id}</th>
-                                <td>{order.firstName} {order.lastName}</td>
-                                <td>{order.quantity}</td>
-                                <td>{new Date(order?.approvedAt).toLocaleString()}</td>
-                                <td>
-                                    {(() => {
-                                        const step = getNextStatusConfig(order.status);
-                                        console.log(step)
-                                        if (!step) return <span className="text-gray-400">Completed</span>;
+                            isLoading ? (
+                                <tr>
+                                    <td colSpan="5" className="text-center py-6">
+                                        <span className="loading loading-spinner text-neutral"></span>
+                                    </td>
+                                </tr>
+                            ) :
+                                (orders.map(order => <tr key={order._id}>
+                                    <th>{order._id}</th>
+                                    <td>{order.firstName} {order.lastName}</td>
+                                    <td>{order.quantity}</td>
+                                    <td>{new Date(order?.approvedAt).toLocaleString()}</td>
+                                    <td>
+                                        {(() => {
+                                            const step = getNextStatusConfig(order.status);
+                                            console.log(step)
+                                            if (!step) return <span className="text-gray-400">Completed</span>;
 
-                                        return (
-                                            <button
-                                                className="btn btn-sm btn-primary"
-                                                onClick={() => openTrackingModal(order, step)}
-                                            >
-                                                {step.label}
-                                            </button>
-                                        );
-                                    })()}
-                                </td>
-                            </tr>)
+                                            return (
+                                                <button
+                                                    className="btn btn-sm btn-primary"
+                                                    onClick={() => openTrackingModal(order, step)}
+                                                >
+                                                    {step.label}
+                                                </button>
+                                            );
+                                        })()}
+                                    </td>
+                                </tr>))
                         }
 
                     </tbody>

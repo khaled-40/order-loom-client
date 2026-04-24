@@ -20,7 +20,7 @@ const OrderDetails = () => {
     const {
         _id,
         status,
-        productId,
+        product,
         unitPrice,
         quantity,
         totalPrice,
@@ -73,7 +73,7 @@ const OrderDetails = () => {
                 <div className="card-body">
                     <h3 className="card-title">Product Information</h3>
                     <p>
-                        <span className="font-medium">Product:</span> {productTitle}
+                        <span className="font-medium">Product:</span> {product}
                     </p>
                 </div>
             </div>

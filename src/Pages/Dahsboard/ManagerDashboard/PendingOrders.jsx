@@ -26,7 +26,7 @@ const PendingOrders = () => {
             return res.data;
         }
     })
-    const { data: orders = [], refetch } = useQuery({
+    const { data: orders = [], refetch, isLoading } = useQuery({
         queryKey: ['orders', 'pending', email],
         queryFn: async () => {
             const res = await axiosSecure.get(`/orders/by-manager-email?status=pending`);
@@ -71,30 +71,37 @@ const PendingOrders = () => {
                     </thead>
                     <tbody>
                         {
-                            orders.map(order => <tr key={order._id}>
-                                <th>{order._id}</th>
-                                <td>{order.firstName}</td>
-                                <td>{order.product}</td>
-                                <td>{order.quantity}</td>
-                                <td>{new Date(order.placedAt).toLocaleString()}</td>
-                                <td className='space-x-1'>
-                                    <Link to={`/dashboard/order-details/${order._id}`}>
-                                        <button className='btn btn-sm'>
-                                            <MdPreview />
+                            isLoading ? (
+                                <tr>
+                                    <td colSpan="6" className="text-center py-6">
+                                        <span className="loading loading-spinner text-neutral"></span>
+                                    </td>
+                                </tr>
+                            ) :
+                                (orders.map(order => <tr key={order._id}>
+                                    <th>{order._id}</th>
+                                    <td>{order.firstName}</td>
+                                    <td>{order.product}</td>
+                                    <td>{order.quantity}</td>
+                                    <td>{new Date(order.placedAt).toLocaleString()}</td>
+                                    <td className='space-x-1'>
+                                        <Link to={`/dashboard/order-details/${order._id}`}>
+                                            <button className='btn btn-sm'>
+                                                <MdPreview />
+                                            </button>
+                                        </Link>
+                                        <button
+                                            onClick={() => handleStatus(order, 'approved')}
+                                            className="btn btn-sm btn-success">
+                                            Accept
                                         </button>
-                                    </Link>
-                                    <button
-                                        onClick={() => handleStatus(order, 'approved')}
-                                        className="btn btn-sm btn-success">
-                                        Accept
-                                    </button>
-                                    <button
-                                        onClick={() => handleStatus(order, 'rejected')}
-                                        className="btn btn-sm btn-error">
-                                        Reject
-                                    </button>
-                                </td>
-                            </tr>)
+                                        <button
+                                            onClick={() => handleStatus(order, 'rejected')}
+                                            className="btn btn-sm btn-error">
+                                            Reject
+                                        </button>
+                                    </td>
+                                </tr>))
                         }
 
                     </tbody>

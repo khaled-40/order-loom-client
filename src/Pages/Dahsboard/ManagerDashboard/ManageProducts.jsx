@@ -33,7 +33,7 @@ const ManageProducts = () => {
     const { user } = useAuth();
     const editModalRef = useRef();
     const axiosSecure = useAxiosSecure();
-    const { data: products=[], refetch } = useQuery({
+    const { data: products = [], refetch, isLoading } = useQuery({
         queryKey: ['products', user?.email],
         queryFn: async () => {
             const res = await axiosSecure.get(`/allproducts/byEmail?email=${user.email}`);
@@ -118,35 +118,42 @@ const ManageProducts = () => {
                     </thead>
                     <tbody>
                         {
-                            products.map((product, index) => <tr key={product._id}>
-                                <th>{index + 1}</th>
-                                <td>
-                                    <div className="flex items-center gap-3">
-                                        <div className="avatar">
-                                            <div className="mask mask-squircle h-12 w-12">
-                                                <img
-                                                    src={product.images}
-                                                    alt="Avatar Tailwind CSS Component" />
+                            isLoading ? (
+                                <tr>
+                                    <td colSpan="6" className="text-center py-6">
+                                        <span className="loading loading-spinner text-neutral"></span>
+                                    </td>
+                                </tr>
+                            ) :
+                                (products.map((product, index) => <tr key={product._id}>
+                                    <th>{index + 1}</th>
+                                    <td>
+                                        <div className="flex items-center gap-3">
+                                            <div className="avatar">
+                                                <div className="mask mask-squircle h-12 w-12">
+                                                    <img
+                                                        src={product.images}
+                                                        alt="Avatar Tailwind CSS Component" />
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                </td>
-                                <td>{product.title}</td>
-                                <td>$ {product.price}</td>
-                                <td>{product.paymentOptions}</td>
-                                <td className='space-x-1'>
-                                    <button
-                                        className='btn btn-sm'
-                                        onClick={() => openEditModal(product)}
-                                    ><FiEdit />
-                                    </button>
-                                    <button
-                                        onClick={() => handleProductDelete(product._id)}
-                                        className='btn btn-sm'>
-                                        <MdDelete />
-                                    </button>
-                                </td>
-                            </tr>)
+                                    </td>
+                                    <td>{product.title}</td>
+                                    <td>$ {product.price}</td>
+                                    <td>{product.paymentOptions}</td>
+                                    <td className='space-x-1'>
+                                        <button
+                                            className='btn btn-sm'
+                                            onClick={() => openEditModal(product)}
+                                        ><FiEdit />
+                                        </button>
+                                        <button
+                                            onClick={() => handleProductDelete(product._id)}
+                                            className='btn btn-sm'>
+                                            <MdDelete />
+                                        </button>
+                                    </td>
+                                </tr>))
                         }
                     </tbody>
                 </table>
