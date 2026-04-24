@@ -18,7 +18,8 @@ const PlaceOrder = () => {
     queryFn: async () => {
       const res = await axiosSecure.get(`/user/byEmail?email=${user.email}`);
       return res.data;
-    }
+    },
+    enabled: !!user?.email
   })
 
   const { data: product = {}, isLoading } = useQuery({
@@ -26,7 +27,8 @@ const PlaceOrder = () => {
     queryFn: async () => {
       const res = await axiosSecure.get(`/products/${id}`)
       return res.data;
-    }
+    },
+    enabled: myUser?.adminApproval === 'approved'
   })
 
   const [quantity, setQuantity] = useState(product?.minimumOrder || 0);
