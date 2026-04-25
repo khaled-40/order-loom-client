@@ -12,7 +12,7 @@ const MyOrders = () => {
     const { data: orders = [], refetch, isLoading } = useQuery({
         queryKey: ['orders', user?.email],
         queryFn: async () => {
-            const res = await axiosSecure.get(`/orders/byEmail?email=${user.email}`)
+            const res = await axiosSecure.get(`/orders/byEmail`)
             return res.data;
         }
     })
@@ -69,7 +69,7 @@ const MyOrders = () => {
                             ) :
                                 (orders.map(order => <tr key={order._id}>
                                     <td>{order._id}</td>
-                                    <td>{order.productTitle}</td>
+                                    <td>{order.product}</td>
                                     <td>{order.quantity}</td>
                                     <td>{order.status}</td>
                                     <td>{order?.payment}</td>

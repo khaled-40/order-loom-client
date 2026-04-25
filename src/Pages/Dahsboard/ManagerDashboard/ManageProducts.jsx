@@ -36,7 +36,7 @@ const ManageProducts = () => {
     const { data: products = [], refetch, isLoading } = useQuery({
         queryKey: ['products', user?.email],
         queryFn: async () => {
-            const res = await axiosSecure.get(`/allproducts/byEmail?email=${user.email}`);
+            const res = await axiosSecure.get(`/allproducts/byEmail`);
             console.log(res.data)
             return res.data;
         }

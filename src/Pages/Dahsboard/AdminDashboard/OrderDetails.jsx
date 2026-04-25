@@ -21,9 +21,9 @@ const OrderDetails = () => {
         _id,
         status,
         product,
-        unitPrice,
+        unit_price,
         quantity,
-        totalPrice,
+        total_price,
         firstName,
         lastName,
         email,
@@ -54,7 +54,7 @@ const OrderDetails = () => {
             <div className="stats shadow bg-base-100">
                 <div className="stat">
                     <div className="stat-title">Total Amount</div>
-                    <div className="stat-value">${totalPrice}</div>
+                    <div className="stat-value">${total_price}</div>
                 </div>
 
                 <div className="stat">
@@ -64,7 +64,7 @@ const OrderDetails = () => {
 
                 <div className="stat">
                     <div className="stat-title">Unit Price</div>
-                    <div className="stat-value">${unitPrice}</div>
+                    <div className="stat-value">${unit_price}</div>
                 </div>
             </div>
 

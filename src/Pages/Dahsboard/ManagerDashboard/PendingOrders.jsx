@@ -11,18 +11,10 @@ const PendingOrders = () => {
     const axiosSecure = useAxiosSecure();
     const email = user?.email ? user.email : null;
     const userEmail = user?.email ? encodeURIComponent(user.email) : null;
-    // const { data: product } = useQuery({
-    //     queryKey: ['product', user?.email],
-    //     queryFn: async () => {
-    //         const res = await axiosSecure.get(`/products/byEmail?email=${user?.email}`);
-    //         console.log(res.data)
-    //         return res.data;
-    //     }
-    // })
     const { data: myUser } = useQuery({
         queryKey: ['user', userEmail],
         queryFn: async () => {
-            const res = await axiosSecure.get(`/user/byEmail?email=${userEmail}`);
+            const res = await axiosSecure.get(`/user/byEmail`);
             return res.data;
         }
     })

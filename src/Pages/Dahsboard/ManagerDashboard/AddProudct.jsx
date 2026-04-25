@@ -15,7 +15,7 @@ const AddProudct = () => {
     const { data: myUser } = useQuery({
         queryKey: ['user', user?.email],
         queryFn: async () => {
-            const res = await axiosSecure.get(`/user/byEmail?email=${user.email}`);
+            const res = await axiosSecure.get(`/user/byEmail`);
             return res.data;
         }
     })
