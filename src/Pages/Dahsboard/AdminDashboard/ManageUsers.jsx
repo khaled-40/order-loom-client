@@ -7,16 +7,23 @@ import Swal from 'sweetalert2';
 
 const ManageUsers = () => {
     const axiosSecure = useAxiosSecure();
+    const [currentPage, setCurrentPage] = useState(1);
     const [statusLoading, setStatusLoading] = useState(false);
     const [user, setUser] = useState(null);
+    const limit = 5;
     const editModalRef = useRef();
-    const { data: users = [], refetch, isLoading } = useQuery({
-        queryKey: ['users'],
+    const { data, refetch, isLoading } = useQuery({
+        queryKey: ['users',currentPage],
         queryFn: async () => {
-            const res = await axiosSecure.get('/users');
+            const res = await axiosSecure.get(`/users?limit=${limit}&skip=${(currentPage - 1) * limit}`);
             return res.data;
         }
     });
+    const users = data?.result || [];
+    const totals = data?.toatlUsers || 0;
+    const totalPages = Math.ceil(totals / limit);
+
+    console.log(users, totals,(currentPage - 1) * limit)
     const handleEditModal = user => {
         setUser(user);
         editModalRef.current.showModal();
@@ -43,8 +50,7 @@ const ManageUsers = () => {
             Swal.fire({
                 icon: "error",
                 title: "Payment Failed",
-                text: error.response?.data?.message || error.message || "Something went wrong",
-                footer: '<a href="#">Why did this happen?</a>'
+                text: error.response?.data?.message || error.message || "Something went wrong"
             });
         } finally {
             setStatusLoading(false)
@@ -52,9 +58,48 @@ const ManageUsers = () => {
 
         // console.log(approval)
     }
+
+    const handleDeleteUser = async (id) => {
+        try {
+            Swal.fire({
+                title: "Are you sure?",
+                text: "You won't be able to revert this!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Yes, delete it!"
+            }).then(async (result) => {
+                if (result.isConfirmed) {
+                    const result = await axiosSecure.delete(`/user/${id}`);
+                    if (result.data.deletedCount) {
+                        Swal.fire({
+                            title: "Deleted!",
+                            text: "Your file has been deleted.",
+                            icon: "success"
+                        });
+                        refetch();
+                    }
+                }
+            });
+
+        } catch (error) {
+            console.error(error);
+
+            Swal.fire({
+                icon: "error",
+                title: "Payment Failed",
+                text: error.response?.data?.message || error.message || "Something went wrong"
+            });
+        }
+    }
+
+    const handlePageChange = (page) => {
+        setCurrentPage(page);
+    }
     return (
         <div>
-            <h2 className='text-2xl font-bold'>Manage Users ({users.length})</h2>
+            <h2 className='text-2xl font-bold'>Manage Users ({totals})</h2>
             <div className="overflow-x-auto">
                 <table className="table table-zebra">
                     {/* head */}
@@ -86,7 +131,7 @@ const ManageUsers = () => {
                                         ><FiEdit />
                                         </button>
                                         <button
-
+                                            onClick={() => handleDeleteUser(user._id)}
                                             className='btn btn-sm'>
                                             <MdDelete />
                                         </button>
@@ -147,6 +192,23 @@ const ManageUsers = () => {
                     </div>
                 </div>
             </dialog>
+
+            <div className="flex flex-wrap justify-center gap-2 my-10">
+                {[...Array(totalPages).keys()].map((num) => {
+                    const page = num + 1;
+
+                    return (
+                        <button
+                            key={page}
+                            onClick={() => handlePageChange(page)}
+                            className={`btn btn-sm ${currentPage === page ? "btn-primary" : "btn-outline"
+                                }`}
+                        >
+                            {page}
+                        </button>
+                    )
+                })}
+            </div>
 
         </div>
     );

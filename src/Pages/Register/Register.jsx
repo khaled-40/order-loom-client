@@ -12,6 +12,7 @@ import useAxiosSecure from '../../Hooks/useAxiosSecure';
 
 const Register = () => {
     const { createUser, signInWithGoogle, updateUserProfile } = useAuth();
+    const axiosSecure = useAxiosSecure();
     const [showPassword, setShowPassword] = useState(false);
     const [loading, setLoading] = useState(false);
     const [googleLoginLoading, setGoogleLoginLoading] = useState(false);
@@ -48,7 +49,7 @@ const Register = () => {
                 photoURL: photoURL
             };
 
-            await useAxiosSecure.post('/users', userInfo);
+            await axiosSecure.post('/users', userInfo);
 
             // 4. Update profile
             await updateUserProfile({
@@ -91,7 +92,7 @@ const Register = () => {
                 photoURL: result.user.photoURL || ""
             };
 
-            const res = await useAxiosSecure.post('/users', userInfo);
+            const res = await axiosSecure.post('/users', userInfo);
 
             // ✅ Verify before showing success
             if (res.data?.insertedId) {

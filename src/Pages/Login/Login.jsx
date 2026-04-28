@@ -12,9 +12,10 @@ import useAxiosSecure from '../../Hooks/useAxiosSecure';
 const Login = () => {
     const { signInWithGoogle, signInUser } = useAuth();
     const [isLoading, setIsLoading] = useState(false);
-    const [registerLoading,setRegisterLoading] = useState(false);
+    const [registerLoading, setRegisterLoading] = useState(false);
     const { register, handleSubmit, formState: { errors } } = useForm();
     const [showPassword, setShowPassword] = useState(false);
+    const axiosSecure = useAxiosSecure();
     const location = useLocation();
     // console.log(location.state)
     const navigate = useNavigate();
@@ -68,7 +69,7 @@ const Login = () => {
             };
 
             // 2. Save user in DB
-            const res = await useAxiosSecure.post('/users', userInfo);
+            const res = await axiosSecure.post('/users', userInfo);
 
             // 3. Verify insertedId
             if (res.data?.insertedId) {
