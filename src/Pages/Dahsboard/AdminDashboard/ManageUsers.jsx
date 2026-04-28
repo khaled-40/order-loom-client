@@ -9,13 +9,14 @@ const ManageUsers = () => {
     const axiosSecure = useAxiosSecure();
     const [currentPage, setCurrentPage] = useState(1);
     const [statusLoading, setStatusLoading] = useState(false);
+    const [searchText, setSearchText] = useState("");
     const [user, setUser] = useState(null);
     const limit = 5;
     const editModalRef = useRef();
     const { data, refetch, isLoading } = useQuery({
-        queryKey: ['users',currentPage],
+        queryKey: ['users', currentPage, searchText],
         queryFn: async () => {
-            const res = await axiosSecure.get(`/users?limit=${limit}&skip=${(currentPage - 1) * limit}`);
+            const res = await axiosSecure.get(`/users?limit=${limit}&skip=${(currentPage - 1) * limit}&search=${searchText}`);
             return res.data;
         }
     });
@@ -23,7 +24,7 @@ const ManageUsers = () => {
     const totals = data?.toatlUsers || 0;
     const totalPages = Math.ceil(totals / limit);
 
-    console.log(users, totals,(currentPage - 1) * limit)
+    console.log(users, totals, (currentPage - 1) * limit)
     const handleEditModal = user => {
         setUser(user);
         editModalRef.current.showModal();
@@ -97,9 +98,30 @@ const ManageUsers = () => {
     const handlePageChange = (page) => {
         setCurrentPage(page);
     }
+
+    const handleSearchUser = (e) => {
+        setSearchText(e);
+    }
     return (
         <div>
-            <h2 className='text-2xl font-bold'>Manage Users ({totals})</h2>
+            <div className='flex justify-between items-center'>
+                <h2 className='text-2xl font-bold'>Manage Users ({totals})</h2>
+                <label className="input">
+                    <svg className="h-[1em] opacity-50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <g
+                            strokeLinejoin="round"
+                            strokeLinecap="round"
+                            strokeWidth="2.5"
+                            fill="none"
+                            stroke="currentColor"
+                        >
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <path d="m21 21-4.3-4.3"></path>
+                        </g>
+                    </svg>
+                    <input onChange={(e) => handleSearchUser(e.target.value)} type="search" required placeholder="Search" />
+                </label>
+            </div>
             <div className="overflow-x-auto">
                 <table className="table table-zebra">
                     {/* head */}
