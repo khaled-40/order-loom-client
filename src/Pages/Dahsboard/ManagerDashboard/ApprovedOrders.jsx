@@ -26,14 +26,16 @@ const ApprovedOrders = () => {
         queryFn: async () => {
             const res = await axiosSecure.get(`/user/byEmail`);
             return res.data;
-        }
+        },
+        enabled: !!user?.email
     })
     const { data: orders = [], refetch, isLoading } = useQuery({
         queryKey: ['orders', email],
         queryFn: async () => {
             const res = await axiosSecure.get(`/orders/by-manager-email`);
             return res.data;
-        }
+        },
+        enabled: !!user?.email
     })
     const { data: orderFlow = [] } = useQuery({
         queryKey: ['order-flow'],
@@ -41,10 +43,10 @@ const ApprovedOrders = () => {
             const res = await axiosSecure.get('/order-flow');
             return res.data;
         },
+        enabled: !!user?.email
     });
 
     const getNextStatusConfig = (currentStatus) => {
-        console.log(currentStatus)
         const currentFlow = orderFlow.find(step => step.key === currentStatus);
         return currentFlow;
     };
@@ -83,7 +85,6 @@ const ApprovedOrders = () => {
                 }
             })
     }
-    console.log(orders, orderFlow, trackingModal, trackingModal?.location, trackingModal?.step?.label)
     return (
         <div>
             <h2 className='text-2xl font-bold'>Approved Orders : <span className='text-primary'>({orders.length})</span></h2>
@@ -116,7 +117,6 @@ const ApprovedOrders = () => {
                                     <td>
                                         {(() => {
                                             const step = getNextStatusConfig(order.status);
-                                            console.log(step)
                                             if (!step) return <span className="text-gray-400">Completed</span>;
 
                                             return (

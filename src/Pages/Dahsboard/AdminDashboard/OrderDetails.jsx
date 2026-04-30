@@ -8,7 +8,6 @@ const OrderDetails = () => {
     const { id } = useParams();
     const axiosSecure = useAxiosSecure();
     const navigate = useNavigate();
-    console.log(id)
     const { data: order = {} } = useQuery({
         queryKey: ['order', id],
         enabled: !!id,

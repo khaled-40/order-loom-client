@@ -20,7 +20,7 @@ const useAxiosSecure = () => {
         const resInterceptors = axiosSecure.interceptors.response.use((response) => {
             return response;
         }, (error) => {
-            console.log(error)
+            console.error(error)
 
             const statusCode = error.status;
             if (statusCode === 401 || statusCode === 403) {

@@ -4,8 +4,10 @@ import { useQuery } from '@tanstack/react-query';
 import { FiEdit } from "react-icons/fi";
 import { MdDelete } from "react-icons/md";
 import Swal from 'sweetalert2';
+import useAuth from '../../../Hooks/useAuth';
 
 const ManageUsers = () => {
+    const { user: auth } = useAuth();
     const axiosSecure = useAxiosSecure();
     const [currentPage, setCurrentPage] = useState(1);
     const [statusLoading, setStatusLoading] = useState(false);
@@ -18,13 +20,13 @@ const ManageUsers = () => {
         queryFn: async () => {
             const res = await axiosSecure.get(`/users?limit=${limit}&skip=${(currentPage - 1) * limit}&search=${searchText}`);
             return res.data;
-        }
+        },
+        enabled: !!auth?.email
     });
     const users = data?.result || [];
     const totals = data?.toatlUsers || 0;
     const totalPages = Math.ceil(totals / limit);
 
-    console.log(users, totals, (currentPage - 1) * limit)
     const handleEditModal = user => {
         setUser(user);
         editModalRef.current.showModal();
@@ -56,8 +58,6 @@ const ManageUsers = () => {
         } finally {
             setStatusLoading(false)
         }
-
-        // console.log(approval)
     }
 
     const handleDeleteUser = async (id) => {

@@ -3,17 +3,19 @@ import React from 'react';
 import useAxiosSecure from '../../../Hooks/useAxiosSecure';
 import { MdPreview } from "react-icons/md";
 import { Link } from 'react-router';
+import useAuth from '../../../Hooks/useAuth';
 
 const AdminAllOrders = () => {
+    const {user} = useAuth();
     const axiosSecure = useAxiosSecure();
     const { data: orders = [],isLoading } = useQuery({
         queryKey: ['orders', 'pending'],
         queryFn: async () => {
             const res = await axiosSecure.get('/orders');
             return res.data;
-        }
+        },
+        enabled: !!user?.email
     })
-    console.log(orders)
     return (
         <div>
             <h2 className='text-2xl font-bold'>Manage Orders <span className='text-primary'>({orders.length})</span></h2>

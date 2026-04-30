@@ -11,13 +11,15 @@ const AddProudct = () => {
     const { user } = useAuth();
     const [imageURL, setImageURL] = useState(null);
     const [imageUploading, setImageUploading] = useState(false);
+    const [addProductLoading, setAddProductLoading] = useState(false);
     const axiosSecure = useAxiosSecure();
     const { data: myUser } = useQuery({
         queryKey: ['user', user?.email],
         queryFn: async () => {
             const res = await axiosSecure.get(`/user/byEmail`);
             return res.data;
-        }
+        },
+        enabled: !!user?.email
     })
     const categories = [
         "Shirt",
@@ -62,24 +64,37 @@ const AddProudct = () => {
         }
     };
 
-    const handleAddProduct = data => {
-        data.showOnHome = false;
-        data.images = imageURL;
-        data.createdByUserEmail = user?.email;
-        data.createdBy = user?.displayName;
-        console.log(data);
-        axiosSecure.post('/products', { data, adminApproval: myUser.adminApproval })
-            .then(res => {
-                reset();
-                console.log(res)
+    const handleAddProduct = async (data) => {
+        setAddProductLoading(true)
+        try {
+            data.showOnHome = false;
+            data.images = imageURL;
+            data.createdByUserEmail = user?.email;
+            data.createdBy = user?.displayName;
+            const res = await axiosSecure.post('/products', { data, adminApproval: myUser.adminApproval });
+            if (res.data.insertedId) {
                 Swal.fire({
                     position: "top-end",
                     icon: "success",
                     title: 'Your product has been added successfully',
                     showConfirmButton: false,
                     timer: 1500
-                });
-            })
+
+                })
+            }
+            reset();
+        } catch (err) {
+            console.error(err);
+
+            Swal.fire({
+                icon: "error",
+                title: "Could not add the product",
+                text: err.response?.data?.message || err.message || "Something went wrong"
+            });
+        } finally {
+            setAddProductLoading(false)
+        }
+
     }
     return (
         <div className=" max-w-7xl">
@@ -250,7 +265,7 @@ const AddProudct = () => {
                         type="submit"
                         className="btn btn-primary"
                     >
-                        Add Product
+                        {addProductLoading ? <span className="loading loading-spinner text-info"></span> : 'Add Product'}
                     </button>
                 </div>
 

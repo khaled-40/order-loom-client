@@ -24,7 +24,6 @@ const Register = () => {
     const handleRegistration = async (data) => {
         setLoading(true);
         try {
-            console.log(data);
 
             const profileImg = data.photo[0];
             const role = data.role;

@@ -6,8 +6,10 @@ import { MdDelete } from 'react-icons/md';
 import { useRef } from 'react';
 import { useForm, Watch } from 'react-hook-form';
 import Swal from 'sweetalert2';
+import useAuth from '../../../Hooks/useAuth';
 
 const AdminAllProducts = () => {
+    const { user } = useAuth();
     const [selectedProduct, setSelectedProduct] = useState({});
     const categories = [
         "Electronics",
@@ -27,15 +29,14 @@ const AdminAllProducts = () => {
         queryKey: ['products'],
         queryFn: async () => {
             const res = await axiosSecure.get('/products');
-            console.log(res.data)
             return res.data;
-        }
+        },
+        enabled: !!user?.email
     });
     const openEditModal = (product) => {
         setSelectedProduct(product)
         // reset(product);
         editModalRef.current.showModal();
-        console.log(product)
     };
     useEffect(() => {
         if (selectedProduct && Object.keys(selectedProduct).length > 0) {
@@ -48,7 +49,6 @@ const AdminAllProducts = () => {
     };
     const handleProductEdit = (data) => {
         data._id = selectedProduct._id;
-        console.log(data);
         axiosSecure.patch('/products', data)
             .then(res => {
                 if (res.data.modifiedCount) {
@@ -61,7 +61,6 @@ const AdminAllProducts = () => {
                         timer: 1500
                     });
                     closeEditModal();
-                    console.log(res)
                 }
             })
     };
@@ -78,7 +77,6 @@ const AdminAllProducts = () => {
             if (result.isConfirmed) {
                 axiosSecure.delete(`/products/${id}`)
                     .then(res => {
-                        console.log(res.data)
                         if (res.data.deletedCount) {
                             refetch();
                             Swal.fire({
@@ -95,8 +93,8 @@ const AdminAllProducts = () => {
     const handleShowOnHomeToggle = (id, showOnHome) => {
         const toggle = !showOnHome;
         axiosSecure.patch(`/products/${id}/toggle`, { toggle })
-            .then(res => {
-                console.log(res)
+            .then(() => {
+                // console.log(res)
             })
     }
     return (

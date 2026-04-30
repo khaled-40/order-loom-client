@@ -37,9 +37,9 @@ const ManageProducts = () => {
         queryKey: ['products', user?.email],
         queryFn: async () => {
             const res = await axiosSecure.get(`/allproducts/byEmail`);
-            console.log(res.data)
             return res.data;
-        }
+        },
+        enabled: !!user?.email
     });
     const openEditModal = (product) => {
         setSelectedProduct(product)
@@ -57,7 +57,6 @@ const ManageProducts = () => {
     };
     const handleProductEdit = (data) => {
         data._id = selectedProduct._id;
-        console.log(data);
         axiosSecure.patch('/products', data)
             .then(res => {
                 if (res.data.modifiedCount) {
@@ -70,7 +69,6 @@ const ManageProducts = () => {
                         timer: 1500
                     });
                     closeEditModal();
-                    console.log(res)
                 }
             })
     };
@@ -87,7 +85,6 @@ const ManageProducts = () => {
             if (result.isConfirmed) {
                 axiosSecure.delete(`/products/${id}`)
                     .then(res => {
-                        console.log(res.data)
                         if (res.data.deletedCount) {
                             refetch();
                             Swal.fire({

@@ -16,16 +16,17 @@ const PendingOrders = () => {
         queryFn: async () => {
             const res = await axiosSecure.get(`/user/byEmail`);
             return res.data;
-        }
+        },
+        enabled: !!user?.email
     })
     const { data: orders = [], refetch, isLoading } = useQuery({
         queryKey: ['orders', 'pending', email],
         queryFn: async () => {
             const res = await axiosSecure.get(`/orders/by-manager-email?status=pending`);
             return res.data;
-        }
+        },
+        enabled: !!user?.email
     })
-    console.log(orders)
     const handleStatus = (order, status) => {
         axiosSecure.patch(`/orders/${order._id}`, {
             status,

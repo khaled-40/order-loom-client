@@ -14,7 +14,8 @@ const MyOrders = () => {
         queryFn: async () => {
             const res = await axiosSecure.get(`/orders/byEmail`)
             return res.data;
-        }
+        },
+        enabled: !!user?.email
     })
     const handleCancel = id => {
         Swal.fire({
@@ -29,7 +30,6 @@ const MyOrders = () => {
             if (result.isConfirmed) {
                 axiosSecure.delete(`/orders/${id}`)
                     .then(res => {
-                        console.log(res.data)
                         if (res.data.deletedCount) {
                             refetch();
                             Swal.fire({

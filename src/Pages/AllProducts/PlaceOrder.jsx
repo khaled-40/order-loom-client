@@ -73,21 +73,19 @@ const PlaceOrder = () => {
       product: product.title,
       unit_price: parseInt(product.price),
       total_price: totalPrice,
-      manager_email: product.createdByUserEmail
+      manager_email: product.createdByUserEmail,
+      createdAt: new Date()
     };
 
-    console.log(paymentInfo);
 
     if (product.paymentOptions === 'stripe') {
-      console.log('add stripe checkout session')
 
 
 
       try {
-        const placeOrderRes = await axiosSecure.post('/orders', { paymentInfo, adminApproval: myUser.adminApproval })
-        console.log(placeOrderRes.data)
+        const placeOrderRes = await axiosSecure.post('/orders', { paymentInfo, adminApproval: myUser.adminApproval });
+        console.log(placeOrderRes)
         const sessionRes = await axiosSecure.post('/create-checkout-session', paymentInfo);
-        console.log(sessionRes.data);
         setCheckoutUrl(sessionRes.data.url);
       }
       catch (error) {
@@ -110,8 +108,6 @@ const PlaceOrder = () => {
     else {
       try {
         const placeOrderRes = await axiosSecure.post('/orders', { paymentInfo, adminApproval: myUser.adminApproval })
-
-        console.log(placeOrderRes.data);
         if (placeOrderRes.data.insertedId) {
           Swal.fire({
             position: "top-end",

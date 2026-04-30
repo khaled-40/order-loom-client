@@ -12,10 +12,9 @@ const MyProfile = () => {
         queryFn: async () => {
             const res = await axiosSecure.get(`/user/byEmail`);
             return res.data;
-        }
+        },
+        enabled: !!user?.email
     })
-
-    console.log(myUser)
 
     const handleLogout = () => {
         signOutUser()
@@ -29,7 +28,7 @@ const MyProfile = () => {
                 });
             })
             .catch(error => {
-                console.log(error)
+                console.error(error)
             })
     }
 

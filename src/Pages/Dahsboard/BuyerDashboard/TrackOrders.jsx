@@ -5,7 +5,6 @@ import useAxiosSecure from '../../../Hooks/useAxiosSecure';
 
 const TrackOrders = () => {
     const { trackingId } = useParams();
-    console.log(trackingId)
     const axiosSecure = useAxiosSecure();
 
     const { data: trackings = [], isLoading } = useQuery({
@@ -16,7 +15,6 @@ const TrackOrders = () => {
         },
         enabled: !!trackingId
     });
-    console.log(trackings)
 
     if (isLoading) return <p>Loading...</p>;
 

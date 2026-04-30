@@ -24,8 +24,6 @@ const Login = () => {
         try {
             setRegisterLoading(true);
 
-            console.log(data);
-
             // 1. Sign in user
             const result = await signInUser(data.email, data.password);
             console.log(result);

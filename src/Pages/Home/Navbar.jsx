@@ -40,7 +40,7 @@ const Navbar = () => {
                 });
             })
             .catch(error => {
-                console.log(error)
+                console.error(error)
             })
     }
     return (
