@@ -1,0 +1,58 @@
+[
+    {
+        "id": 1,
+        "quote": "Order Loom helped us track every garment order from cutting to delivery. We reduced production delays by nearly 30% within the first month.",
+        "name": "Shahidul Islam",
+        "role": "Factory Manager",
+        "avatar": "https://i.pravatar.cc/150?img=11"
+    },
+    {
+        "id": 2,
+        "quote": "Before using this system, we constantly lost track of order status. Now everything is visible in one place, and client communication has improved a lot.",
+        "name": "Nabila Rahman",
+        "role": "Merchandiser",
+        "avatar": "https://i.pravatar.cc/150?img=12"
+    },
+    {
+        "id": 3,
+        "quote": "The real-time updates are a game changer. I can monitor production progress without calling the factory floor every hour.",
+        "name": "Tanvir Ahmed",
+        "role": "Production Supervisor",
+        "avatar": "https://i.pravatar.cc/150?img=13"
+    },
+    {
+        "id": 4,
+        "quote": "Order Loom made our workflow structured. From order placement to shipment, everything is organized and easy to follow.",
+        "name": "Farzana Akter",
+        "role": "Operations Executive",
+        "avatar": "https://i.pravatar.cc/150?img=14"
+    },
+    {
+        "id": 5,
+        "quote": "We used to miss deadlines due to poor coordination. This system improved team accountability and reduced errors significantly.",
+        "name": "Mahmudul Hasan",
+        "role": "Line Manager",
+        "avatar": "https://i.pravatar.cc/150?img=15"
+    },
+    {
+        "id": 6,
+        "quote": "The dashboard gives a clear overview of all ongoing orders. It saves hours of manual tracking every day.",
+        "name": "Sadia Noor",
+        "role": "Planning Officer",
+        "avatar": "https://i.pravatar.cc/150?img=16"
+    },
+    {
+        "id": 7,
+        "quote": "Managing multiple buyers became much easier. We can now handle bulk orders without confusion or data loss.",
+        "name": "Rakib Hossain",
+        "role": "Export Coordinator",
+        "avatar": "https://i.pravatar.cc/150?img=17"
+    },
+    {
+        "id": 8,
+        "quote": "This tool brought transparency into our production pipeline. Every department knows what to do and when.",
+        "name": "Jannatul Ferdous",
+        "role": "Quality Control Officer",
+        "avatar": "https://i.pravatar.cc/150?img=18"
+    }
+]
