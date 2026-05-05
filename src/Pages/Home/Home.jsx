@@ -5,6 +5,7 @@ import LatestProducts from './LatestProducts';
 import HowItWorks from './HowItWorks';
 import Footer from './Footer';
 import Reviews from './Reviews';
+import WhyChooseUs from './WhyChooseUs';
 
 const reviewPromise = fetch('/reviews.json').then(res => res.json());
 
@@ -14,6 +15,7 @@ const Home = () => {
             <Hero></Hero>
             <LatestProducts></LatestProducts>
             <HowItWorks></HowItWorks>
+            <WhyChooseUs></WhyChooseUs>
             <Reviews reviewPromise={reviewPromise}></Reviews>
         </div>
     );
